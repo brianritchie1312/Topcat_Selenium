@@ -179,26 +179,26 @@ parser.add_argument('--os',
 # Gather all arguments
 
 # Example arguments, meant for testing within IDE (eg. Atom Runner)
-args = parser.parse_args(['--url', 'http://vm1.nubes.stfc.ac.uk:8080',
-                          # '--fac-short', 'LILS',
-                          # '--fac-long', 'Lorum Ipsum Light Source',
-                          '--user-data', 'simple', 'root', 'pass',
-                          '--user-nodata', 'db', 'root', 'password',
-                          # '--user-admin', 'simple', 'root', 'pass',
-                          # '--path', '/home/user1/icatdownloads/Tests',
-                          # '--virtual-display',
-                          '--browsers', 'chrome', 'firefox',
-                          # '--log-level', 'trace',
-                          '--geckodriver', '0.19.1',
-                          '--chromedriver', '2.35',
-                          '--os', 'WiNdOwS', '64',
-                          ])
+# args = parser.parse_args(['--url', 'http://vm1.nubes.stfc.ac.uk:8080',
+#                           # '--fac-short', 'LILS',
+#                           # '--fac-long', 'Lorum Ipsum Light Source',
+#                           '--user-data', 'simple', 'root', 'pass',
+#                           '--user-nodata', 'db', 'root', 'password',
+#                           # '--user-admin', 'simple', 'root', 'pass',
+#                           # '--path', '/home/user1/icatdownloads/Tests',
+#                           # '--virtual-display',
+#                           '--browsers', 'chrome', 'firefox',
+#                           # '--log-level', 'trace',
+#                           '--geckodriver', '0.19.1',
+#                           '--chromedriver', '2.35',
+#                           '--os', 'WiNdOwS', '64',
+#                           ])
 
 # args = parser.parse_args(['--help'])
 
 # Uncomment the line below line when using actual CLI arguments
 
-# args = parser.parse_args()
+args = parser.parse_args()
 
 #-------------------------------------------------------------------------------
 # Variables
