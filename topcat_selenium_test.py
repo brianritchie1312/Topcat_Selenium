@@ -179,26 +179,26 @@ parser.add_argument('--os',
 # Gather all arguments
 
 # Example arguments, meant for testing within IDE (eg. Atom Runner)
-# args = parser.parse_args(['--url', 'http://vm1.nubes.stfc.ac.uk:8080',
-#                           # '--fac-short', 'LILS',
-#                           # '--fac-long', 'Lorum Ipsum Light Source',
-#                           '--user-data', 'simple', 'root', 'pass',
-#                           '--user-nodata', 'db', 'root', 'password',
-#                           # '--user-admin', 'simple', 'root', 'pass',
-#                           # '--path', '/home/user1/icatdownloads/Tests',
-#                           # '--virtual-display',
-#                           '--browsers', 'chrome', 'firefox',
-#                           # '--log-level', 'trace',
-#                           '--geckodriver', '0.19.1',
-#                           '--chromedriver', '2.35',
-#                           '--os', 'WiNdOwS', '64',
-#                           ])
+args = parser.parse_args(['--url', 'http://vm1.nubes.stfc.ac.uk:8080',
+                          # '--fac-short', 'LILS',
+                          # '--fac-long', 'Lorum Ipsum Light Source',
+                          '--user-data', 'simple', 'root', 'pass',
+                          '--user-nodata', 'db', 'root', 'password',
+                          # '--user-admin', 'simple', 'root', 'pass',
+                          # '--path', '/home/user1/icatdownloads/Tests',
+                          # '--virtual-display',
+                          '--browsers', 'chrome', 'firefox',
+                          # '--log-level', 'trace',
+                          '--geckodriver', '0.19.1',
+                          '--chromedriver', '2.35',
+                          '--os', 'WiNdOwS', '64',
+                          ])
 
 # args = parser.parse_args(['--help'])
 
 # Uncomment the line below line when using actual CLI arguments
 
-args = parser.parse_args()
+# args = parser.parse_args()
 
 #-------------------------------------------------------------------------------
 # Variables
@@ -868,21 +868,7 @@ def test_nav_tabs():
     print(link_check('a[translate="MAIN_NAVIGATION.MAIN_TAB.MY_DATA"]', '/#/my-data/' + facilty_short_name))
 #-END-
 
-def test_nav_search():
-    browser.get(icat_url + "/#/search/start")
-    search_visit = "Proposal"
-    search_dataset = "Dataset"
-    search_datafile = "Datafile"
 
-    # Search that should only have results in Visit
-    search_test(search_visit, True, False, False)
-
-    # Search that should only have results in Dataset
-    search_test(search_dataset, False, True, False)
-
-    # Search that should only have results in Datafile
-    search_test(search_datafile, False, False, True)
-#-END-
 
 #---Data------------------------------------------------------------------------
 
@@ -941,6 +927,7 @@ def test_data_downloads():
 
 #---Data Navigation-------------------------------------------------------------
 
+# Test browse tabs
 def test_datanav_browse():
     browser.get(icat_url + '/#/browse/facility/' + facilty_short_name + '/proposal')
 
@@ -962,6 +949,22 @@ def test_datanav_browse():
     # TODO - Add upwards browsing (eg. click breadcrumb links)
 #-END-
 
+def test_datanav_search():
+    browser.get(icat_url + "/#/search/start")
+    search_visit = "Proposal"
+    search_dataset = "Dataset"
+    search_datafile = "Datafile"
+
+    # Search that should only have results in Visit
+    search_test(search_visit, True, False, False)
+
+    # Search that should only have results in Dataset
+    search_test(search_dataset, False, True, False)
+
+    # Search that should only have results in Datafile
+    search_test(search_datafile, False, False, True)
+#-END-
+
 # Check if info tab show when clicking non active area of items
 def test_datanav_infotab():
     datanav_infotab("Visit", icat_home)
@@ -970,6 +973,8 @@ def test_datanav_infotab():
 
     datanav_infotab("Datafile", datafile_url)
 #-END-
+
+
 
 #---Cart------------------------------------------------------------------------
 
@@ -1281,6 +1286,9 @@ def print_variables():
     print("")
     print(txt.HEADING + "[ Gathering Variables ]" + txt.BASIC)
 
+    # OS
+    print("OS: " + os_name + os_bit + " (If this is incorrect, you can overide it, see '--help')")
+
     # URL
     print("URL: " + icat_url)
 
@@ -1324,13 +1332,31 @@ def print_variables():
     # Browsers
     print("Browsers: ", end="")
     if (firefox == True):
-        print("Firefox, ", end="")
+        print("Firefox ", end="")
     if (chrome == True):
-        print("Chrome, ", end="")
+        print("Chrome ", end="")
     print("")
 
     # Log Level
     print("Log Level: " + log_level)
+
+    # Geckodriver
+    if (firefox == True):
+        print("Geckodriver: ", end='')
+        if (args.geckodriver_version != None):
+            print(geckodriver_version)
+        else:
+            print("Already present (version unknown)")
+    #-END-
+
+    # Chromedriver
+    if (firefox == True):
+        print("Chromedriver: ", end='')
+        if (args.chromedriver_version != None):
+            print(chromedriver_version)
+        else:
+            print("Already present (version unknown)")
+
 
     # Newline
     print(txt.BOLD + "[ Gathering Variables Complete ]" + txt.BASIC)
@@ -1355,13 +1381,14 @@ def test_browser():
     test_nav_toolbar_admin(data_is_admin)   # data_is_admin = Boolean defined in arguments above
     test_nav_footer()
     test_nav_tabs()
-    test_nav_search()
+
     #--Data--
     test_data_exists(True)
     test_data_cart()
     test_data_downloads()
     #--Data Navigation--
     test_datanav_browse()
+    test_datanav_search()
     test_datanav_infotab()
     #--Cart--
     test_cart_add()
@@ -1438,9 +1465,4 @@ print("            | |                                                          
 print("            |_|                                                                  ")
 print("---------------------------------------------------------------------------------")
 
-print("Python thinks you are running: " + os_name + os_bit + " but could be mistaken. If so, you can overide this, see '--help'")
-if (args.os_name != None):
-    print("User Overide: Testing for " + os_name + os_bit)
-
 test_master()
-

@@ -120,6 +120,7 @@ Notes
 * If the script downloads the wrong webdriver (eg. 32bit instead of 64bit) then you should delete the executable add the `--os {name} {bits}` argument and run again or manually download and extract the correct version.
 * There is no 64bit windows version of chromedriver so the script downloads 32bit version for windows regardless of the system or user override.
 * Only some versions of chromedriver have 32bit linux versions, so double check versions.
+* For use in IDEs or environments without CLI arguments, there is a block at the end of the arguments section with example arguments, uncomment it (and comment out `args = parser.parse_args()`), modify the arguments as you wish then run.
 
 
 Organization of script
@@ -158,9 +159,15 @@ Initiate Tests.
 Common Errors
 -------------
 
-##### Something about 'marionette':
+##### Something about 'marionette' or " Web element reference not seen before:"
 
-Something is probably using port 2828, often the webdriver is still running in the background from a prior, failed test so kill it with task manager or command line. If you need port 2828 for something else, change the port number in `gecko.sh` or under `test_firefox()`.
+Something is probably using port 2828, often the webdriver is still running in the background from a prior, failed test so kill it with task manager or command line. Try using
+```Shell
+netstat -tulpn | grep 2828
+```
+Then killing the firefox processes that are shown. I haven't had this problem with chrome you could probably just kill any instances of chrome.
+
+If you need port 2828 for something else, change the port number in `gecko.sh` or under `test_firefox()`.
 
 ##### "Unable to find a matching set of capabilities"
 You probably have the wrong version of geckodriver/chromedriver for your system architecture.
@@ -184,22 +191,23 @@ TODO
 
 * Auto-close/kill previous instances of geckodriver/chromedriver
 * Add upwards browsing (eg. datafile -> dataset -> investigation) to Data Navigation tests
-* Move `test_nav_search()` to `test_datanav_search()`
 * Wait until file exists (with timeout) instead of time.sleep(x) on `test_download_action()`
 * Add download progress bars for downloads
 * Create optional debug output or logfile
 * More detail in `test_datanav_infotab()` (eg. check each tab, compare filename strings)
-* More detail in `test_nav_search()` (eg. test tickboxes)
+* More detail in `test_datanav_search()` (eg. test tickboxes)
 * Add conditional to skip geckodriver workaround if/when version with bug fix is released
 * Add single letter arguments (eg. -g, --geckodriver)
-* Move os/bit into `print_variables()`
-* Add webdriver version to `print_variables()`
-* On Linux firefox is downloading to '/Downloads' instead of dir_dwn_browser, fix
+* Remove last comma from browser list in variable output
 
 Changelog
 ---------
 
+##### 16/01/2018(2)
+* Moved `test_nav_search()` to `test_datanav_search()`
+* Moved OS variable print to `print_variables()`
+* Added geckodriver/chromedriver print to `print_variables()`
+
 ##### 16/01/2018
 * Separated from ICAT-Ansible
 * Created Readme
-
