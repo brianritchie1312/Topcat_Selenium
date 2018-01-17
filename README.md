@@ -110,6 +110,7 @@ This script has a few command line arguments.
 | --geckodriver {version number}                  | No        | --geckodriver 0.19.1                | Assumes geckodriver already present   | Downloads and extract specified version of geckodriver (firefox webdriver) if not present.|
 | --chromedriver {version number}                 | No        | --chromedriver 0.19.1               | Assumes chromedriver already present  | Downloads and extract specified version of chromedriver if not present.                   |
 | --os {name} {bits}                              | No        | --os linux 64                       | Script attempts to gather info itself | Sometimes the script incorrectly assumes the OS and architecture, if this happens the wrong webdriver could be downloaded. Using this, the script ignores what python thinks it's running on and downloads the version specified by the argument. |
+| --on-fail {action}                              |           | --on-fail print                     | Print is used                         | If a task fails it will either PRINT (print 'Failed' and move on) or EXIT (close browser and return exit code 1) |
 
 
 Notes
@@ -128,17 +129,17 @@ Organization of script
 
 The script is organized in a particular way for ease of reading.
 
-##### Notes
+#### Notes
 Contains comments and a todo list.
-##### Imports
+#### Imports
 Contains all the imported modules the script needs.
-##### Arguments
+#### Arguments
 Contains all the command line arguments
-##### Variables
+#### Variables
 Gathers arguments and other variables and declares them here. Most global variables are here.
-##### Shortcuts
+#### Shortcuts
 Methods/functions used in multiple places in the code, using returning another variable or performing basic task
-##### Tests
+#### Tests
 These are the tests run by each user. There split into several categories:
 * URL
 * Login
@@ -153,13 +154,13 @@ These are the tests run by each user. There split into several categories:
 
 All tests not under browser, other or master should be found and run in `test_browser()` which itself is under master
 
-##### Runtime
+#### Runtime
 Initiate Tests.
 
 Common Errors
 -------------
 
-##### Something about 'marionette' or " Web element reference not seen before:"
+#### Something about 'marionette' or " Web element reference not seen before:"
 
 Something is probably using port 2828, often the webdriver is still running in the background from a prior, failed test so kill it with task manager or command line. Try using
 ```Shell
@@ -169,18 +170,18 @@ Then killing the firefox processes that are shown. I haven't had this problem wi
 
 If you need port 2828 for something else, change the port number in `gecko.sh` or under `test_firefox()`.
 
-##### "Unable to find a matching set of capabilities"
+#### "Unable to find a matching set of capabilities"
 You probably have the wrong version of geckodriver/chromedriver for your system architecture.
 
   1. Delete the geckodriver/chromedriver executables
   2. Check if you are on 32bit or 64bit
   3. Add `--os {name} {bits}` to command line. OR download and extract the correct version into the testing directory .
 
-##### "geckodriver/gecko.sh/chromediver needs to be in system PATH"
+#### "geckodriver/gecko.sh/chromediver needs to be in system PATH"
 
 It doesn't but you are probably missing either the executable or the `executable_path=exc_firefox` argument from the `brower = webdriver.Firefox()` line under `test_firefox()` or the chrome version under `test_chrome()`. The 'exc_firefox/exc_chrome' variables should be declared a few lines above this.
 
-##### Test says 'Failed' even when the element/file it's searching for actually does exist
+#### Test says 'Failed' even when the element/file it's searching for actually does exist
 Try finding the test within the script and finding the `time.sleep()` line just before the if/try statement. Then increase the time within the brackets (eg. change `time.sleep(1)` to `time.sleep(3)`). It could just be a slow loading/downloading speed.
 
 If problem still occurs, double check the element selector/filename strings.
@@ -199,9 +200,15 @@ TODO
 * Add conditional to skip geckodriver workaround if/when version with bug fix is released
 * Add single letter arguments (eg. -g, --geckodriver)
 * Remove last comma from browser list in variable output
+* Fix fail count
 
 Changelog
 ---------
+
+##### 2018.01.17
+* Added fail argument, users can choose what happens when a task fails. PRINT will print 'Failed' then carry on, EXIT will stop the script
+* Add version numbering, the format is the date of the commit YYYY.MM.DD eg. 2018.01.17. If multiple commits are made on a single day then 2018.01.17-2
+
 
 ##### 16/01/2018(2)
 * Moved `test_nav_search()` to `test_datanav_search()`

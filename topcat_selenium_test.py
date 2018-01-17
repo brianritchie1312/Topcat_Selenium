@@ -64,6 +64,9 @@ import argparse
 # Regexp
 import re
 
+# Traceback
+import traceback
+
 # Firefox
 from selenium.webdriver import Firefox
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
@@ -84,20 +87,21 @@ required = parser.add_argument_group('required arguments')
 required.add_argument('--url',
                       action='store',
                       dest='icat_url',
-                      help='The url of the icat build you wish to test, including port number.',
-                      required=True)
+                      help='The url of the icat build you wish to test, including port number. (Example: "--url http://vm#.nubes.stfc.ac.uk:8080")',
+                      required=True,
+                      )
 
 parser.add_argument('--fac-short',
                     action='store',
                     dest='fac_short',
-                    help='Short Name of Facility, used in URLs. (eg. --fac-short LILS) (default: LILS)',
+                    help='Short Name of Facility, used in URLs. (Example: "--fac-short LILS") (Default: LILS)',
                     required=False,
                     )
 
 parser.add_argument('--fac-long',
                     action='store',
                     dest='fac_long',
-                    help='Long Name of Facility, used in Login and footer. (eg. --fac-short Lorum Ipsum Light Source) (default: Lorum Ipsum Light Source)',
+                    help='Long Name of Facility, used in Login and footer.( Example "--fac-short Lorum Ipsum Light Source") (Default: Lorum Ipsum Light Source)',
                     required=False,
                     )
 
@@ -106,75 +110,93 @@ required.add_argument('--user-data',
                       action='append',
                       nargs='+',
                       dest='user_data',
-                      help='The user with rights to the testdata. (syntax: --user-data <mechanism> <username> <password>) (eg. --user-data simple root pass)',
-                      required=True)
+                      help='The user with rights to the testdata. (Syntax: "--user-data <mechanism> <username> <password>") (Example: "--user-data simple root pass")',
+                      required=True,
+                      )
 
 # Unprivillaged user
 parser.add_argument('--user-nodata',
                     action='append',
                     nargs='+',
                     dest='user_nodata',
-                    help='The user without rights to the testdata, used to ensure unprivileged users can not access data. If not used, No Data User Tests will not be performed. (syntax: --user-nodata <mechanism> <username> <password>) (eg. --user-nodata simple user1 pass)',
-                    required=False)
+                    help='The user without rights to the testdata, used to ensure unprivileged users can not access data. If not used, No Data User Tests will not be performed. (Syntax: "--user-nodata <mechanism> <username> <password>") (Example. "--user-nodata simple user1 pass")',
+                    required=False,
+                    )
 
 # Unprivillaged user
 parser.add_argument('--user-admin',
                     action='append',
                     nargs='+',
                     dest='user_admin',
-                    help='The admin user, only needed if --user-data is not admin. If not used, Data User will perform admin tests. (syntax: --user-admin <mechanism> <username> <password>) (eg. --user-admin simple root pass)',
-                    required=False)
+                    help='The admin user, only needed if Data User is not admin. If not used, Data User will perform admin tests. (Syntax: "--user-data <mechanism> <username> <password>") (Example: "--user-data simple root pass")',
+                    required=False,
+                    )
 
 # Create Virtual Display if GUI unavailiable
 parser.add_argument('--virtual-display',
                      action='store_true',
                      dest='virtual_display',
-                     help='Creates a pyvirtualdisplay, use if GUI is unavailiable',
-                     required=False)
+                     help='Creates a pyvirtualdisplay, use if GUI is unavailiable.',
+                     required=False,
+                     )
 
 # Working directory if in alternative location
 parser.add_argument('--path',
                     action='store',
                     dest='dir_test',
-                    help='Absolute path to directory containing webdrivers and download folders (default: parent directory of this script)',
-                    required=False)
+                    help='Absolute path to directory containing webdrivers and download folders. (Example: "--path /home/user1/tests") (Default: Same as script directory)',
+                    required=False,
+                    )
 
 # Browsers to test
 parser.add_argument('--browsers',
                     action='append',
                     nargs='+',
                     dest='browsers',
-                    help='List of browsers to test. eg. "--browsers firefox chrome" (default: firefox) (supported: firefox, chrome)',
-                    required=False)
+                    help='List of browsers to test. (Syntax: ""--browsers <item1> <item2> ...") (Example "--browsers firefox chrome) (Default: Only Firefox) (Supported: Firefox, Chrome)"',
+                    required=False,
+                    )
 
 # Log level
 parser.add_argument('--log-level',
                     action='store',
                     dest='log_level',
-                    help='Log level of webdrivers (default: unchanged). Currently only firefox supported. eg. --log-level trace',
-                    required=False)
+                    help='Log level of webdrivers, currently only geckodriver (firefox) is supported. (Example: "--log-level trace") (Default: unchanged) (Supported: See geckodriver)',
+                    required=False,
+                    )
 
 # Geckodriver
 parser.add_argument('--geckodriver',
                     action='store',
                     dest='geckodriver_version',
-                    help='Download and extract specified geckodriver (firefox webdriver) version if not already present. eg. "--dwn-geckodriver 0.19.1". (default: nothing download)',
-                    required=False)
+                    help='Download and extract specified geckodriver (firefox webdriver) version if not already present. (Syntax: "--geckodriver <version_num>") (Example: "--geckodriver 0.19.1") (Default: No downloads)',
+                    required=False,
+                    )
 
 # chromedriver
 parser.add_argument('--chromedriver',
                     action='store',
                     dest='chromedriver_version',
-                    help='Download and extract specified chromedriver (chrome webdriver) version if not already present. eg. "--dwn-chromedriver 2.35". (default: nothing download)',
-                    required=False)
+                    help='Download and extract specified chromedriver (chrome webdriver) version if not already present. (Syntax: "--chromedriver <version_num>") (Example: "--chromedriver 2.35") (Default: No downloads)',
+                    required=False,
+                    )
 
 # OS name
 parser.add_argument('--os',
                     action='append',
                     nargs='+',
                     dest='os_name',
-                    help='If python is incorrectly guessing the os of the machine, you can overide it with this. (syntax: --os <os> <bits>) (eg. "--os windows 64" or "--os linux 32")',
-                    required=False)
+                    help='If python is incorrectly guessing the os of the machine, you can overide it with this. (Syntax: "--os <os> <bits>") (Example. "--os windows 64" or "--os linux 32")',
+                    required=False,
+                    )
+
+# On Fail
+parser.add_argument('--on-fail',
+                    action='store',
+                    dest='on_fail',
+                    help='Should a test fail, what should this script do? (Example: "--on-fail PRINT") (Default: PRINT) (Supported: PRINT, EXIT)',
+                    required=False,
+                    )
 
 # Gather all arguments
 
@@ -191,7 +213,8 @@ parser.add_argument('--os',
 #                           # '--log-level', 'trace',
 #                           '--geckodriver', '0.19.1',
 #                           '--chromedriver', '2.35',
-#                           '--os', 'WiNdOwS', '64',
+#                           '--os', 'windows', '64',
+#                           '--on-fail', 'print',
 #                           ])
 
 # args = parser.parse_args(['--help'])
@@ -312,13 +335,11 @@ else:
 #-END-
 
 # --os
-global os_name
-global os_bit
 if (args.os_name != None):
     # os_name
     if (args.os_name[0][0].lower() == "linux"):
         os_name = "linux"
-    elif (args.os_name[0][0].lower() == "windows"):
+    elif (args.os_name[0][0].lower() == "windows") or (args.os_name[0][0].lower() == "win"):
         os_name = "win"
     else:
         print(os_name[0][0] + " is either not recognised or not supported.")
@@ -346,15 +367,39 @@ else:
         print(platform.machine()[-2:] + "bit not recognised or not supported. Value taken from platform.machine() = " + platform.machine())
 #-END-
 
+# --on-fail
+if (args.on_fail != None):
+    if (args.on_fail.lower() == "print"):
+        on_fail = "PRINT"
+    elif (args.on_fail.lower() == "exit"):
+        on_fail = "EXIT"
+#-END-
+
 # CSS_SELECTOR of Frequently Used Elements
 obj_cart_icon = '.glyphicon.glyphicon-shopping-cart'
 obj_downloads_icon = '.glyphicon.glyphicon-download-alt'
-obj_row_link = 'a[ng-click="grid.appScope.browse(row.entity)"]'
+obj_row_link = 'a[ng-click="grid.appScope.browse(row.entity)"]' # First data element
 
+# Fail Count
+fail_count = 0
 
 #-------------------------------------------------------------------------------
 # Alliases/Shortcuts
 #-------------------------------------------------------------------------------
+
+# What to do on fail
+def fail_test(extra):
+    if (on_fail == "PRINT"):
+        print(txt.Failed + extra)
+        # fail_count += 1  # TODO - This returns UnboundLocalError for some reason
+    elif (on_fail == "EXIT"):
+        print(txt.Failed + extra)
+        print("Closing Browser")
+        browser.close()
+        traceback.print_stack()
+        print("Exiting with exit code 1")
+        exit(1)
+#-END-
 
 # Donwload and Extract chosen webdriver
 def download_webdriver(driver, version, allow_download):
@@ -418,7 +463,6 @@ def download_webdriver(driver, version, allow_download):
         else: # If executable is absent but downloads are disabled
             print("Please Download and extract the " + driver + " excutable to '" + dir_test + "' or add '--" + driver + " VERSION_NUM' to command line.")
 #-END-
-
 
 # Uncompress zip/tarfiles
 def archive_extract(filename):
@@ -624,10 +668,11 @@ def link_check(element, target):
         if (browser.current_url == icat_url + target):
             return (txt.Success)
         else:
-            return (txt.Failed + " (current url: " + browser.current_url + ")")
+            fail_test(" (current url: " + browser.current_url + ")")
+            # return (txt.Failed + " (current url: " + browser.current_url + ")")
 
     except NoSuchElementException as ex:
-        return (txt.Failed + " (link element does not exist)")
+        fail_test("")
         print(ex)
 #-END-
 
@@ -670,13 +715,13 @@ def search_results(search, tab, target):
         if (element_exists('div[class="ui-grid-cell-contents ng-scope"]') == True): # IF results DO exist
             print(txt.Success + " (Results Exist)")
         else:
-            print(txt.Failed + " (Results Do Not Exist)")
+            fail_test(" (Results Do Not Exist)")
 
     else:        # If results shouldn't exist
         if (element_exists('div[class="ui-grid-cell-contents ng-scope"]') == False):
             print(txt.Success + " (No Results, None Expected)")
         else:
-            print(txt.Failed + " (Results Exist, None Expected)")
+            fail_test(" (Results Exist, None Expected)")
 #-END-
 
 # Click on first item and check if naviagate to correct location
@@ -693,7 +738,7 @@ def browse_click(level, target, element):
     if (element_exists('i[translate="ENTITIES.' + target.upper() + '.NAME"]') == True):
         print(txt.Success)
     else:
-        print(txt.Failed + " ( Can't find 'ENTITIES." + target.upper() + ".NAME' | on page: " + browser.current_url + ")")
+        fail_test(" ( Can't find 'ENTITIES." + target.upper() + ".NAME' | on page: " + browser.current_url + ")")
 #-END-
 
 # Click non-active section of row and check if info tab appears
@@ -712,7 +757,7 @@ def datanav_infotab(level, url):
     if (element_exists('div[class="ui-grid-row ng-scope"]') == True):
         print(txt.Success)
     else:
-        print(txt.Failed + " (Info Tab Not Present)")
+        fail_test(" (Info Tab Not Present)")
 #-END-
 
 
@@ -754,9 +799,9 @@ def test_url():
         if (browser.current_url == icat_url + '/#/login'):
             print(txt.Success + " (" + browser.current_url + ")")
         else:
-            print(txt.Failed + " (" + browser.current_url + ")")
+            fail_test(" (" + browser.current_url + ")")
     except NoSuchElementException as ex:
-        print(txt.Failed)
+        fail_test("")
         print(ex)
 #-END-
 
@@ -774,7 +819,7 @@ def test_login(mechanism, username, password):
     if (browser.current_url == icat_home):
         print(txt.Success)
     else:
-        print(txt.Failed + " (On page '" + browser.current_url + "')")
+        fail_test(" (On page '" + browser.current_url + "')")
 #-END-
 
 #---Navigation------------------------------------------------------------------
@@ -785,16 +830,16 @@ def test_nav_toolbar():
     time.sleep(1)
 
     print("Toolbar About Page Link Test: ", end='')
-    print(link_check('a[ui-sref="about"]', '/#/about'))
+    link_check('a[ui-sref="about"]', '/#/about')
 
     print("Toolbar Contact Page Link Test: ", end='')
-    print(link_check('a[ui-sref="contact"]', '/#/contact'))
+    link_check('a[ui-sref="contact"]', '/#/contact')
 
     print("Toolbar Help Page Link Test: ", end='')
-    print(link_check('a[ui-sref="help"]', '/#/help'))
+    link_check('a[ui-sref="help"]', '/#/help')
 
     print("Toolbar Home Page Link Test: ", end='')
-    print(link_check('a[ui-sref="homeRoute"]', '/#/my-data/' + facilty_short_name))
+    link_check('a[ui-sref="homeRoute"]', '/#/my-data/' + facilty_short_name)
 #-END-
 
 # Check if admin link is present for admin user and is hidden for non-admin user(s)
@@ -805,13 +850,13 @@ def test_nav_toolbar_admin(admin):
 
     if (admin == True):
         print("Toolbar Admin Page Link: ", end='')
-        print(link_check('a[ui-sref="admin.downloads"]', '/#/admin/downloads/' + facilty_short_name))
+        link_check('a[ui-sref="admin.downloads"]', '/#/admin/downloads/' + facilty_short_name)
     else:
         print("Toolbar Admin Page Link Hidden: ", end='')
         if (element_find('li[ng-show="indexController.adminFacilities.length > 0"]').get_attribute("class") == "ng-hide"):
             print(txt.Success)
         else:
-            print(txt.Failed)
+            fail_test("")
 #-END-
 
 # Check footer elements exist
@@ -820,7 +865,7 @@ def test_nav_footer():
     if (element_exists('footer[class="footer"]') == True):
         print(txt.Success)
     else:
-        print(txt.Failed)
+        fail_test("")
 
     # TODO see if it can specified that these must be children of footer element
 
@@ -829,28 +874,28 @@ def test_nav_footer():
         browser.find_element(By.LINK_TEXT, facilty_long_name)
         print(txt.Success)
     except NoSuchElementException:
-        print(txt.Failed + " (trying to find: " + facilty_long_name + ")")
+        fail_test(" (trying to find: " + facilty_long_name + ")")
 
     print("Footer Privacy Policy Link Existence: ", end='')
     try:
         browser.find_element(By.LINK_TEXT, 'Privacy Policy')
         print(txt.Success)
     except NoSuchElementException:
-        print(txt.Failed)
+        fail_test("")
 
     print("Footer Cookie Policy Link Existence: ", end='')
     try:
         browser.find_element(By.LINK_TEXT, 'Cookie Policy')
         print(txt.Success)
     except NoSuchElementException:
-        print(txt.Failed)
+        fail_test("")
 
     print("Footer About Us Link Existence: ", end='')
     try:
         browser.find_element(By.LINK_TEXT, 'About Us')
         print(txt.Success)
     except NoSuchElementException:
-        print(txt.Failed)
+        fail_test("")
 #-END-
 
 # Find and click 'My Data', 'Browse' and 'Search' tabs
@@ -859,16 +904,14 @@ def test_nav_tabs():
     time.sleep(1)
 
     print("Tabs Browse Link Test: ", end='')
-    print(link_check('a[translate="MAIN_NAVIGATION.MAIN_TAB.BROWSE"]', '/#/browse/facility/' + facilty_short_name +'/proposal'))
+    link_check('a[translate="MAIN_NAVIGATION.MAIN_TAB.BROWSE"]', '/#/browse/facility/' + facilty_short_name +'/proposal')
 
     print("Tabs Search Link Test: ", end='')
-    print(link_check('a[translate="MAIN_NAVIGATION.MAIN_TAB.SEARCH"]', '/#/search/start'))
+    link_check('a[translate="MAIN_NAVIGATION.MAIN_TAB.SEARCH"]', '/#/search/start')
 
     print("Tabs My Data Link Test: ", end='')
-    print(link_check('a[translate="MAIN_NAVIGATION.MAIN_TAB.MY_DATA"]', '/#/my-data/' + facilty_short_name))
+    link_check('a[translate="MAIN_NAVIGATION.MAIN_TAB.MY_DATA"]', '/#/my-data/' + facilty_short_name)
 #-END-
-
-
 
 #---Data------------------------------------------------------------------------
 
@@ -883,11 +926,11 @@ def test_data_exists(data):
         if (element_exists(obj_row_link) == True):
             print(txt.Success)
         else:
-            print(txt.Failed)
+            fail_test("")
     else:
         print("Data Absence Test: ", end='')
         if (element_exists(obj_row_link) == True):
-            print(txt.Failed)
+            fail_test("")
         else:
             print(txt.Success)
 #-END-
@@ -896,7 +939,7 @@ def test_data_exists(data):
 def test_data_cart():
     print("Initial Cart Empty Test: ", end='')
     if (element_exists(obj_cart_icon) == True):
-        print(txt.Failed + " (" + element_find('span[ng-click="indexController.showCart()"]').text + ")", end='')
+        fail_test(" (" + element_find('span[ng-click="indexController.showCart()"]').text + ")")
 
         while (element_exists(obj_cart_icon) == True):
             cart_clear()
@@ -914,7 +957,7 @@ def test_data_cart():
 def test_data_downloads():
     print("Initial Downloads Empty Test: ", end='')
     if (element_exists(obj_downloads_icon) == True):
-        print(txt.Failed, end='')
+        fail_test()
         downloads_clear()
         time.sleep(1)
         if (element_exists(obj_downloads_icon) == False):
@@ -948,6 +991,7 @@ def test_datanav_browse():
 
     # TODO - Add upwards browsing (eg. click breadcrumb links)
 #-END-
+#-END-
 
 def test_datanav_search():
     browser.get(icat_url + "/#/search/start")
@@ -973,8 +1017,6 @@ def test_datanav_infotab():
 
     datanav_infotab("Datafile", datafile_url)
 #-END-
-
-
 
 #---Cart------------------------------------------------------------------------
 
@@ -1010,7 +1052,7 @@ def test_cart_rm():
     if (cart_items() == 1):
         print(txt.Success + " (" + element_find('span[ng-click="indexController.showCart()"]').text + ")")
     else:
-        print(txt.Failed + " (" + element_find('span[ng-click="indexController.showCart()"]').text + ")")
+        fail_test(" (" + element_find('span[ng-click="indexController.showCart()"]').text + ")")
 #-END-
 
 # CLear the cart
@@ -1022,7 +1064,7 @@ def test_cart_clear():
     if (element_exists(obj_cart_icon) == False):
         print(txt.Success)
     else:
-        print(txt.Failed + " (" + element_find('span[ng-click="indexController.showCart()"]').text + ")")
+        fail_test(" (" + element_find('span[ng-click="indexController.showCart()"]').text + ")")
 #-END-
 
 #---Download--------------------------------------------------------------------
@@ -1043,7 +1085,7 @@ def test_download_action():
 
         print(txt.Success)
     except NoSuchElementException as ex:
-        print(txt.Failed)
+        fail_test("")
         print(ex)
 
     print("Downloaded Datafile Exists: ", end='')
@@ -1056,7 +1098,7 @@ def test_download_action():
         print(txt.Success + " ('" + datafile_name + "' exists in browser's download directory)")
 
     else:
-        print(txt.Failed + " (" + datafile_name + " does not exist in browser's download directory)")
+        fail_test(" (" + datafile_name + " does not exist in browser's download directory)")
 #-END-
 
 # Download via cart
@@ -1098,14 +1140,14 @@ def test_download_cart():
     if (element_exists('option[label="https"]') == True):
         print(txt.Success)
     else:
-        print(txt.Failed + " (https method not an option)")
+        fail_test(" (https method not an option)")
 
     # Check Globus method option availiable
     print("Cart Transport/Access Method 'globus' Option Exists: ", end='')
     if (element_exists('option[label="globus"]') == True):
         print(txt.Success + " (Note: Download Via Globus not tested)")
     else:
-        print(txt.Failed + " (globus method not an option)")
+        fail_test(" (globus method not an option)")
 
 
     # Download
@@ -1126,9 +1168,9 @@ def test_download_cart():
         if (element_exists(obj_downloads_icon) == True):
             print(txt.Success)
         else:    # Downloads has not appeared
-            print(txt.Failed + " (Download icon does not exist)")
+            fail_test(" (Download icon does not exist)")
     else:    # Cart has not been removed
-            print(txt.Failed + " (Cart still exists)")
+            fail_test(" (Cart still exists)")
 
     # Check If Zip file exists where expected
     print("Downloaded Zip Exists: ", end='')
@@ -1141,7 +1183,7 @@ def test_download_cart():
     if zipfile.is_zipfile(file_zip + ".zip"):
         print(txt.Success + " ('" + zipfile_name + ".zip' exists in browser's download directory)")
     else:
-        print(txt.Failed + " ('" + zipfile_name + ".zip' does not exist in browser's download directory)")
+        fail_test(" ('" + zipfile_name + ".zip' does not exist in browser's download directory)")
 #-END-
 
 # Check if download is marked as 'Availiable' is downloads window
@@ -1159,17 +1201,17 @@ def test_download_available():
         if (element_find('span[class="ng-binding ng-scope"]').text == "Available"):
             print(txt.Success)
         else:
-            print(txt.Failed + "(Download is '" + element_find('span[class="ng-binding ng-scope"]').text + "')")
+            fail_test("(Download is '" + element_find('span[class="ng-binding ng-scope"]').text + "')")
 
         # If Download Button exists
         print("Download Button Exists in Downloads: ", end='')
         if (element_exists('a[translate="DOWNLOAD.ACTIONS.LINK.HTTP_DOWNLOAD.TEXT"]') == True) or (element_exists('a[translate="DOWNLOAD.ACTIONS.LINK.GLOBUS_DOWNLOAD.TEXT"]') == True):
             print(txt.Success)
         else:
-            print(txt.Failed + " (Download button does not exist)")
+            fail_test(" (Download button does not exist)")
 
     else:
-        print(txt.Failed + " (Downloads does not exist)")
+        fail_test(" (Downloads does not exist)")
 #-END-
 
 # Remove all items from downloads
@@ -1177,7 +1219,7 @@ def test_download_clear():
     print("Clear Downloads: ", end='')
     downloads_clear()
     if (element_exists(obj_downloads_icon) == True):
-        print(txt.Failed + " (Downloads still exists)")
+        fail_test(" (Downloads still exists)")
     else:
         print(txt.Success)
 #-END-
@@ -1445,7 +1487,7 @@ def test_master():
         test_chrome()
 
     print("")
-    # TODO - count errors and exit if failed
+    # print(str(fail_count) + " fails") # TODO - uncomment when fail_count bug sorted
     print( txt.GREEN + "Test Complete" + txt.BASIC)
 #-END-
 
@@ -1464,5 +1506,6 @@ print("    |_|\___/| .__/ \_____\__,_|\__| |_____/ \___|_|\___|_| |_|_|\__,_|_| 
 print("            | |                                                                  ")
 print("            |_|                                                                  ")
 print("---------------------------------------------------------------------------------")
+print("Version: 2018.01.17")
 
 test_master()
