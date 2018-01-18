@@ -205,6 +205,9 @@ TODO
 Changelog
 ---------
 
+##### 2018.01.18
+* Fixed on_fail being undefined if argument not used
+
 ##### 2018.01.17
 * Added fail argument, users can choose what happens when a task fails. PRINT will print 'Failed' then carry on, EXIT will stop the script
 * Add version numbering, the format is the date of the commit YYYY.MM.DD eg. 2018.01.17. If multiple commits are made on a single day then 2018.01.17-2
@@ -217,4 +220,4 @@ Changelog
 
 ##### 16/01/2018
 * Separated from ICAT-Ansible
-* Created Readme
+* Created Readme                                                              

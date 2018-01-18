@@ -373,6 +373,8 @@ if (args.on_fail != None):
         on_fail = "PRINT"
     elif (args.on_fail.lower() == "exit"):
         on_fail = "EXIT"
+else:
+    on_fail = "PRINT"
 #-END-
 
 # CSS_SELECTOR of Frequently Used Elements
@@ -1506,6 +1508,6 @@ print("    |_|\___/| .__/ \_____\__,_|\__| |_____/ \___|_|\___|_| |_|_|\__,_|_| 
 print("            | |                                                                  ")
 print("            |_|                                                                  ")
 print("---------------------------------------------------------------------------------")
-print("Version: 2018.01.17")
+print("Version: 2018.01.18")
 
 test_master()
