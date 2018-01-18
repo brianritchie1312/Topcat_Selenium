@@ -959,7 +959,7 @@ def test_data_cart():
 def test_data_downloads():
     print("Initial Downloads Empty Test: ", end='')
     if (element_exists(obj_downloads_icon) == True):
-        fail_test()
+        fail_test("")
         downloads_clear()
         time.sleep(1)
         if (element_exists(obj_downloads_icon) == False):
@@ -1399,7 +1399,7 @@ def print_variables():
         if (args.chromedriver_version != None):
             print(chromedriver_version)
         else:
-            print("Already present (version unknown)")
+            print("Will not be downloaded")
 
 
     # Newline
