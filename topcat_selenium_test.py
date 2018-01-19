@@ -795,16 +795,13 @@ def datanav_infotab(level, url):
 #-Navigate to Topcat home page and check if redirected to login
 def test_url():
     print("Load Login Page: ", end='')
-    try:
-        browser.get(icat_url)
-        time.sleep(3)
-        if (browser.current_url == icat_url + '/#/login'):
-            print(txt.Success + " (" + browser.current_url + ")")
-        else:
-            fail_test(" (On page: " + browser.current_url + ")")
-    except NoSuchElementException as ex:
-        fail_test("")
-        print(ex)
+    browser.get(icat_url)
+    time.sleep(3)
+
+    if (browser.current_url == icat_url + '/#/login'):
+        print(txt.Success + " (" + browser.current_url + ")")
+    else:
+        fail_test(" (On page: " + browser.current_url + ")")
 #-END-
 
 #---Login-----------------------------------------------------------------------
@@ -1511,6 +1508,6 @@ print("    |_|\___/| .__/ \_____\__,_|\__| |_____/ \___|_|\___|_| |_|_|\__,_|_| 
 print("            | |                                                                  ")
 print("            |_|                                                                  ")
 print("---------------------------------------------------------------------------------")
-print("Version: 18.01.19.04")
+print("Version: 18.01.19.06")
 
 test_master()
