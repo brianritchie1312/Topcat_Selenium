@@ -326,7 +326,7 @@ else:
 #-END-
 
 # --dwn-chromedriver
-if (args.geckodriver_version != None):
+if (args.chromedriver_version != None):
     chromedriver_dwn = True
     chromedriver_version = args.chromedriver_version
 else:
@@ -1511,6 +1511,6 @@ print("    |_|\___/| .__/ \_____\__,_|\__| |_____/ \___|_|\___|_| |_|_|\__,_|_| 
 print("            | |                                                                  ")
 print("            |_|                                                                  ")
 print("---------------------------------------------------------------------------------")
-print("Version: 2018.01.19")
+print("Version: 2018.01.20")
 
 test_master()
