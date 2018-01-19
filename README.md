@@ -202,19 +202,45 @@ TODO
 * Remove last comma from browser list in variable output
 * Fix fail count
 
+
+Version Numbering
+-----------------
+
+This could well be a temporary measure to be replaced by a more standardized system when the script is ready for proper use.
+
+Version number format:
+
+`Year.Month.Day.Number`
+
+`YY.MM.DD.XX`
+
+For example:
+
+`18.01.22.00` is the first version of 22/01/2018.
+
+`18.01.22.01` is the second.
+
+`18.01.22.02` and so on.
+
+`18.01.23.00` is the first of 23/01/2018.
+
+This should ensure the newest version is always at the top of the tag list.
+
 Changelog
 ---------
 
-##### 2018.01.19
+##### 18.01.19.04
+* Corrected version numbering
+
+##### 18.01.19.00
 * Minor corrections
 
-##### 2018.01.18
+##### 18.01.18.00
 * Fixed on_fail being undefined if argument not used
 
-##### 2018.01.17
+##### 18.01.17.00
 * Added fail argument, users can choose what happens when a task fails. PRINT will print 'Failed' then carry on, EXIT will stop the script
-* Add version numbering, the format is the date of the commit YYYY.MM.DD eg. 2018.01.17. If multiple commits are made on a single day then 2018.01.17-2
-
+* Add version numbering
 
 ##### 16/01/2018(2)
 * Moved `test_nav_search()` to `test_datanav_search()`
