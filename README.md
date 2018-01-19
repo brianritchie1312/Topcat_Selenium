@@ -107,8 +107,8 @@ This script has a few command line arguments.
 | --path {path}                                   | No        | --path /home/user1/tests            | Script's current directory used       | Directory where webdriver excutables are and files will be downloaded to.                 |
 | --browsers {browser1} {browser2} ...            | No        | --browsers firefox chrome           | Only firefox tested                   | List of browsers to test. (Supported: firefox, chrome)                                    |
 | --log-level {loglevel}                          | No        | --log-level trace                   | Default log level used                | Log level of webdrivers. Currently only geckodriver.log (firefox webdriver) is modified.  |
-| --geckodriver {version number}                  | No        | --geckodriver 0.19.1                | Assumes geckodriver already present   | Downloads and extract specified version of geckodriver (firefox webdriver) if not present.|
-| --chromedriver {version number}                 | No        | --chromedriver 0.19.1               | Assumes chromedriver already present  | Downloads and extract specified version of chromedriver if not present.                   |
+| --geckodriver {version number}                  |Recommended| --geckodriver 0.19.1                | Assumes geckodriver already present   | Downloads and extract specified version of geckodriver (firefox webdriver) if not present.|
+| --chromedriver {version number}                 |Recommended| --chromedriver 0.19.1               | Assumes chromedriver already present  | Downloads and extract specified version of chromedriver if not present.                   |
 | --os {name} {bits}                              | No        | --os linux 64                       | Script attempts to gather info itself | Sometimes the script incorrectly assumes the OS and architecture, if this happens the wrong webdriver could be downloaded. Using this, the script ignores what python thinks it's running on and downloads the version specified by the argument. |
 | --on-fail {action}                              |           | --on-fail print                     | Print is used                         | If a task fails it will either PRINT (print 'Failed' and move on) or EXIT (close browser and return exit code 1) |
 
@@ -204,6 +204,9 @@ TODO
 
 Changelog
 ---------
+
+##### 2018.01.19
+* Minor corrections
 
 ##### 2018.01.18
 * Fixed on_fail being undefined if argument not used

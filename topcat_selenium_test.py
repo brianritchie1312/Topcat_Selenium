@@ -201,27 +201,27 @@ parser.add_argument('--on-fail',
 # Gather all arguments
 
 # Example arguments, meant for testing within IDE (eg. Atom Runner)
-# args = parser.parse_args(['--url', 'http://vm1.nubes.stfc.ac.uk:8080',
-#                           # '--fac-short', 'LILS',
-#                           # '--fac-long', 'Lorum Ipsum Light Source',
-#                           '--user-data', 'simple', 'root', 'pass',
-#                           '--user-nodata', 'db', 'root', 'password',
-#                           # '--user-admin', 'simple', 'root', 'pass',
-#                           # '--path', '/home/user1/icatdownloads/Tests',
-#                           # '--virtual-display',
-#                           '--browsers', 'chrome', 'firefox',
-#                           # '--log-level', 'trace',
-#                           '--geckodriver', '0.19.1',
-#                           '--chromedriver', '2.35',
-#                           '--os', 'windows', '64',
-#                           '--on-fail', 'print',
-#                           ])
+args = parser.parse_args(['--url', 'http://vm1.nubes.stfc.ac.uk:8080',
+                          # '--fac-short', 'LILS',
+                          # '--fac-long', 'Lorum Ipsum Light Source',
+                          '--user-data', 'simple', 'root', 'pass',
+                          '--user-nodata', 'db', 'root', 'password',
+                          # '--user-admin', 'simple', 'root', 'pass',
+                          # '--path', '/home/user1/icatdownloads/Tests',
+                          # '--virtual-display',
+                          '--browsers', 'chrome', 'firefox',
+                          # '--log-level', 'trace',
+                          '--geckodriver', '0.19.1',
+                          '--chromedriver', '2.35',
+                          '--os', 'windows', '64',
+                          # '--on-fail', 'EXIT',
+                          ])
 
 # args = parser.parse_args(['--help'])
 
 # Uncomment the line below line when using actual CLI arguments
 
-args = parser.parse_args()
+# args = parser.parse_args()
 
 #-------------------------------------------------------------------------------
 # Variables
@@ -797,11 +797,11 @@ def test_url():
     print("Load Login Page: ", end='')
     try:
         browser.get(icat_url)
-        time.sleep(2)
+        time.sleep(3)
         if (browser.current_url == icat_url + '/#/login'):
             print(txt.Success + " (" + browser.current_url + ")")
         else:
-            fail_test(" (" + browser.current_url + ")")
+            fail_test(" (On page: " + browser.current_url + ")")
     except NoSuchElementException as ex:
         fail_test("")
         print(ex)
@@ -1361,11 +1361,7 @@ def print_variables():
 
     # Virtual Display
     if (args.virtual_display == True):
-        w = 1920
-        h = 1080
-        display = Display(visible=0, size=(w, h))
-        display.start()
-        print("Virtual Display Used (" + str(w) + "x" + str(h) + ")")
+        print("Virtual Display Used")
     else:
         print("Virtual Display Not Used")
 
@@ -1394,7 +1390,7 @@ def print_variables():
     #-END-
 
     # Chromedriver
-    if (firefox == True):
+    if (chrome == True):
         print("Chromedriver: ", end='')
         if (args.chromedriver_version != None):
             print(chromedriver_version)
@@ -1482,6 +1478,13 @@ def test_master():
 
     print_variables()
 
+    # Start Virtual Display
+    if (args.virtual_display == True):
+        w = 1920
+        h = 1080
+        display = Display(visible=0, size=(w, h))
+        display.start()
+
     if (firefox == True):
         test_firefox()
 
@@ -1508,6 +1511,6 @@ print("    |_|\___/| .__/ \_____\__,_|\__| |_____/ \___|_|\___|_| |_|_|\__,_|_| 
 print("            | |                                                                  ")
 print("            |_|                                                                  ")
 print("---------------------------------------------------------------------------------")
-print("Version: 2018.01.18")
+print("Version: 2018.01.19")
 
 test_master()
