@@ -79,7 +79,7 @@ Dependencies
     ```
 
 
-* A working TopCat/ICAT setup with:
+* A working TopCat/ICAT *(see [icat.ansible](https://github.com/JHaydock-Pro/icat.ansible))* with:
     * A URL accessible by the machine this script is running on
     * At least one Facility
     * At least one authentication plugin
@@ -88,6 +88,7 @@ Dependencies
       * At least two datasets in the same investigation/visit
       * At least one datafile in each of those datasets named 'Datafile1' (name can be changed under `test_download_action()` if need)
       * Those datafiles must exist in the location specified in the icat database
+
 
 
 Arguments
@@ -160,6 +161,27 @@ Initiate Tests.
 Common Errors
 -------------
 
+If the script keeps returning errors, the first that might be worth trying is killing all instances of;
+* pyvirtualdisplay
+* Xvfb
+* firefox
+* geckodriver
+* marionette
+* chrome
+* chromedriver,
+
+Sometimes failures leave the processes running in the background, this sometimes causes problems.
+
+Try using this system.
+```Shell
+pstree -Aaup | grep firefox
+kill <process ID>
+```
+You can use something like `killall firefox` but this can be dangerous.
+
+With GUI just use task manager or OS equivalent.
+
+
 #### Something about 'marionette' or " Web element reference not seen before:"
 
 Something is probably using port 2828, often the webdriver is still running in the background from a prior, failed test so kill it with task manager or command line. Try using
@@ -228,6 +250,9 @@ This should ensure the newest version is always at the top of the tag list.
 
 Changelog
 ---------
+
+##### 18.01.22.03
+* Script now closes webdrivers after tests complete or Failed return. This should reduce errors.
 
 ##### 18.01.22.00
 * Corrected missing success output on toolbar test

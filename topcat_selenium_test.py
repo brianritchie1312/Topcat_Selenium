@@ -397,7 +397,7 @@ def fail_test(extra):
     elif (on_fail == "EXIT"):
         print(txt.Failed + extra)
         print("Closing Browser")
-        browser.close()
+        browser.quit()
         traceback.print_stack()
         print("Exiting with exit code 1")
         exit(1)
@@ -1278,7 +1278,7 @@ def test_firefox():
     browser = webdriver.Firefox(profile, firefox_options=ff_options, executable_path=exc_firefox)
     test_browser()
     print("Closing Firefox")
-    browser.close()
+    browser.quit()
     print(txt.BOLD + "[ Firefox Test Complete ]" + txt.BASIC)
 #-END-
 
@@ -1296,7 +1296,7 @@ def test_chrome():
     print("Chrome Download Directory: " + dir_dwn_browser)
 
     chrome_options = ChromeOptions()
-    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--no-sandbox") # Travis breaks if this line does not exist (It took me way too long to find out)
     chrome_prefs = {"download.default_directory" : dir_dwn_browser}
     chrome_options.add_experimental_option("prefs", chrome_prefs)
 
@@ -1312,7 +1312,7 @@ def test_chrome():
     browser = webdriver.Chrome(chrome_options=chrome_options, executable_path=exc_chrome)
     test_browser()
     print("Closing Chrome")
-    browser.close()
+    browser.quit()
     print(txt.BOLD + "[ Chrome Test Complete ]" + txt.BASIC)
 #-END-
 
@@ -1506,6 +1506,6 @@ print("    |_|\___/| .__/ \_____\__,_|\__| |_____/ \___|_|\___|_| |_|_|\__,_|_| 
 print("            | |                                                                  ")
 print("            |_|                                                                  ")
 print("---------------------------------------------------------------------------------")
-print("Version: 18.01.22.02")
+print("Version: 18.01.22.03")
 
 test_master()
