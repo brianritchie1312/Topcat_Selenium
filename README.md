@@ -229,6 +229,9 @@ This should ensure the newest version is always at the top of the tag list.
 Changelog
 ---------
 
+##### 18.01.22.00
+* Corrected missing success output on toolbar test
+
 ##### 18.01.19.04
 * Corrected version numbering
 

@@ -201,27 +201,27 @@ parser.add_argument('--on-fail',
 # Gather all arguments
 
 # Example arguments, meant for testing within IDE (eg. Atom Runner)
-# args = parser.parse_args(['--url', 'http://vm1.nubes.stfc.ac.uk:8080',
-#                           # '--fac-short', 'LILS',
-#                           # '--fac-long', 'Lorum Ipsum Light Source',
-#                           '--user-data', 'simple', 'root', 'pass',
-#                           '--user-nodata', 'db', 'root', 'password',
-#                           # '--user-admin', 'simple', 'root', 'pass',
-#                           # '--path', '/home/user1/icatdownloads/Tests',
-#                           # '--virtual-display',
-#                           '--browsers', 'chrome', 'firefox',
-#                           # '--log-level', 'trace',
-#                           '--geckodriver', '0.19.1',
-#                           '--chromedriver', '2.35',
-#                           '--os', 'windows', '64',
-#                           # '--on-fail', 'EXIT',
-#                           ])
+args = parser.parse_args(['--url', 'http://vm1.nubes.stfc.ac.uk:8080',
+                          # '--fac-short', 'LILS',
+                          # '--fac-long', 'Lorum Ipsum Light Source',
+                          '--user-data', 'simple', 'root', 'pass',
+                          '--user-nodata', 'db', 'root', 'password',
+                          # '--user-admin', 'simple', 'root', 'pass',
+                          # '--path', '/home/user1/icatdownloads/Tests',
+                          # '--virtual-display',
+                          '--browsers', 'chrome', 'firefox',
+                          # '--log-level', 'trace',
+                          '--geckodriver', '0.19.1',
+                          '--chromedriver', '2.35',
+                          '--os', 'windows', '64',
+                          # '--on-fail', 'EXIT',
+                          ])
 
 # args = parser.parse_args(['--help'])
 
 # Uncomment the line below line when using actual CLI arguments
 
-args = parser.parse_args()
+# args = parser.parse_args()
 
 #-------------------------------------------------------------------------------
 # Variables
@@ -668,7 +668,7 @@ def link_check(element, target):
         time.sleep(1)
 
         if (browser.current_url == icat_url + target):
-            return (txt.Success)
+            print(txt.Success)
         else:
             fail_test(" (current url: " + browser.current_url + ")")
             # return (txt.Failed + " (current url: " + browser.current_url + ")")
@@ -1508,6 +1508,6 @@ print("    |_|\___/| .__/ \_____\__,_|\__| |_____/ \___|_|\___|_| |_|_|\__,_|_| 
 print("            | |                                                                  ")
 print("            |_|                                                                  ")
 print("---------------------------------------------------------------------------------")
-print("Version: 18.01.19.06")
+print("Version: 18.01.22")
 
 test_master()
