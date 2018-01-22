@@ -1296,9 +1296,7 @@ def test_chrome():
     print("Chrome Download Directory: " + dir_dwn_browser)
 
     chrome_options = ChromeOptions()
-    # if (log_level != 'default'):
-    #     chrome_options.log.level = log_level
-
+    chrome_options.add_argument("--no-sandbox")
     chrome_prefs = {"download.default_directory" : dir_dwn_browser}
     chrome_options.add_experimental_option("prefs", chrome_prefs)
 
@@ -1508,6 +1506,6 @@ print("    |_|\___/| .__/ \_____\__,_|\__| |_____/ \___|_|\___|_| |_|_|\__,_|_| 
 print("            | |                                                                  ")
 print("            |_|                                                                  ")
 print("---------------------------------------------------------------------------------")
-print("Version: 18.01.22.01")
+print("Version: 18.01.22.02")
 
 test_master()
