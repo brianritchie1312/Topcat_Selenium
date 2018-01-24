@@ -161,16 +161,16 @@ Initiate Tests.
 Common Errors
 -------------
 
-If the script keeps returning errors, the first that might be worth trying is killing all instances of;
+If the script keeps returning errors, the first that might be worth trying is killing all instances of:
 * pyvirtualdisplay
 * Xvfb
 * firefox
 * geckodriver
 * marionette
-* chrome
-* chromedriver,
+* google-chrome
+* chromedriver
 
-Sometimes failures leave the processes running in the background, this sometimes causes problems.
+Sometimes failures leave these processes running in the background, this sometimes causes problems.
 
 Try using this system.
 ```Shell
@@ -184,24 +184,29 @@ With GUI just use task manager or OS equivalent.
 
 #### Something about 'marionette' or " Web element reference not seen before:"
 
-Something is probably using port 2828, often the webdriver is still running in the background from a prior, failed test so kill it with task manager or command line. Try using
+Something is probably using port 2828, often the webdriver is still running in the background from a prior, failed test so kill it with task manager or try using:
 ```Shell
 netstat -tulpn | grep 2828
 ```
-Then killing the firefox processes that are shown. I haven't had this problem with chrome you could probably just kill any instances of chrome.
+If the process using port 2828 is firefox/marionette/geckodriver, kill it then run the script again.
 
 If you need port 2828 for something else, change the port number in `gecko.sh` or under `test_firefox()`.
+
 
 #### "Unable to find a matching set of capabilities"
 You probably have the wrong version of geckodriver/chromedriver for your system architecture.
 
   1. Delete the geckodriver/chromedriver executables
   2. Check if you are on 32bit or 64bit
-  3. Add `--os {name} {bits}` to command line. OR download and extract the correct version into the testing directory .
+  3. Add `--os {name} {bits}` to command line. OR download and extract the correct version into the testing directory, the script will then use that one.
+
+*NOTE: There are no 64bit versions of chromedriver, use 32bit.*
+
 
 #### "geckodriver/gecko.sh/chromediver needs to be in system PATH"
 
 It doesn't but you are probably missing either the executable or the `executable_path=exc_firefox` argument from the `brower = webdriver.Firefox()` line under `test_firefox()` or the chrome version under `test_chrome()`. The 'exc_firefox/exc_chrome' variables should be declared a few lines above this.
+
 
 #### Test says 'Failed' even when the element/file it's searching for actually does exist
 Try finding the test within the script and finding the `time.sleep()` line just before the if/try statement. Then increase the time within the brackets (eg. change `time.sleep(1)` to `time.sleep(3)`). It could just be a slow loading/downloading speed.
@@ -212,7 +217,6 @@ If problem still occurs, double check the element selector/filename strings.
 TODO
 ----
 
-* Auto-close/kill previous instances of geckodriver/chromedriver
 * Add upwards browsing (eg. datafile -> dataset -> investigation) to Data Navigation tests
 * Wait until file exists (with timeout) instead of time.sleep(x) on `test_download_action()`
 * Add download progress bars for downloads
@@ -248,8 +252,13 @@ For example:
 
 This should ensure the newest version is always at the top of the tag list.
 
+
 Changelog
 ---------
+
+##### 18.01.24.00
+* Improved README
+* Added fail counter
 
 ##### 18.01.22.03
 * Script now closes webdrivers after tests complete or Failed return. This should reduce errors.

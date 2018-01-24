@@ -222,7 +222,7 @@ parser.add_argument('--on-fail',
 # Uncomment the line below line when using actual CLI arguments
 
 args = parser.parse_args()
-
+#
 #-------------------------------------------------------------------------------
 # Variables
 #-------------------------------------------------------------------------------
@@ -393,7 +393,8 @@ fail_count = 0
 def fail_test(extra):
     if (on_fail == "PRINT"):
         print(txt.Failed + extra)
-        # fail_count += 1  # TODO - This returns UnboundLocalError for some reason
+        global fail_count
+        fail_count += 1
     elif (on_fail == "EXIT"):
         print(txt.Failed + extra)
         print("Closing Browser")
@@ -1487,8 +1488,12 @@ def test_master():
         test_chrome()
 
     print("")
-    # print(str(fail_count) + " fails") # TODO - uncomment when fail_count bug sorted
-    print( txt.GREEN + "Test Complete" + txt.BASIC)
+    if (fail_count == 0):
+        print(txt.GREEN, end='')
+    else:
+        print(txt.RED, end='')
+
+    print("Test complete with " + str(fail_count) + " fails")
 #-END-
 
 #-------------------------------------------------------------------------------
