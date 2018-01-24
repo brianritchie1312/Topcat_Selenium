@@ -437,35 +437,38 @@ def download_webdriver(driver, version, allow_download):
     archive_path = os.path.join(dir_test, archive_file)
 
     # Check if executable exists
-    print("Checking if " + driver + " executable is present in " + dir_test + ": ", end='')
+    print("Checking if " + driver + " executable is present in test directory: ", end='')
     if os.path.isfile(os.path.join(dir_test, exc_file)):
-        print("Present")
+        print(txt.BOLD + "Present" + txt.BASIC)
     else:
-        print("NOT Present")
+        print(txt.BOLD + "NOT Present" + txt.BASIC)
 
         if (allow_download == True):
 
             # Check if archive file exists
-            print("Checking if " + archive_file + " is present in " + dir_test + ": ", end='')
+            print("Checking if " + archive_file + " is present in test directory: ", end='')
             if (archive_exists(archive_path)):
-                print("Present")
+                print(txt.BOLD + "Present" + txt.BASIC)
             else:
-                print("NOT Present")
+                print(txt.BOLD + "NOT Present" + txt.BASIC)
 
                 # Download archive if not present
                 print("Downloading " + url_file + ": ", end='')
                 urllib.urlretrieve(url_file, archive_file)
                 time.sleep(3)
-                print("Done")
+                print(txt.BOLD + "Done" + txt.BASIC)
 
                 # Extract archived file
                 print("Extracting " + archive_file + ": ", end='')
                 archive_extract(archive_file)
-                print("Done")
+                print(txt.BOLD + "Done" + txt.BASIC)
 
         else: # If executable is absent but downloads are disabled
-            print("Please Download and extract the " + driver + " excutable to '" + dir_test + "' or add '--" + driver + " VERSION_NUM' to command line.")
+            print("Please Download and extract the " + driver + " excutable to test directory or add '--" + driver + " VERSION_NUM' to command line.")
+
+    print("")
 #-END-
+
 
 # Uncompress zip/tarfiles
 def archive_extract(filename):

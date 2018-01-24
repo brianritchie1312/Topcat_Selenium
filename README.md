@@ -227,6 +227,7 @@ TODO
 * Add single letter arguments (eg. -g, --geckodriver)
 * Remove last comma from browser list in variable output
 * Fix fail count
+* Add MacOS support, it should be easy (just add extra elif to webdriver zipnames)
 
 
 Version Numbering
@@ -255,6 +256,9 @@ This should ensure the newest version is always at the top of the tag list.
 
 Changelog
 ---------
+
+##### 18.01.24.01
+* Slight modification to download_webdriver() output
 
 ##### 18.01.24.00
 * Improved README
