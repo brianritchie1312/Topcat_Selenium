@@ -1,5 +1,6 @@
 TopCat Selenium
 ===============
+*NOTE: the most recent chrome update (64.0.3282.119) seems the break chromedriver so until I add chromium support or a new chromedriver is released, you'll have to skip chrome testing*
 
 Summary
 -------
@@ -200,7 +201,7 @@ You probably have the wrong version of geckodriver/chromedriver for your system 
   2. Check if you are on 32bit or 64bit
   3. Add `--os {name} {bits}` to command line. OR download and extract the correct version into the testing directory, the script will then use that one.
 
-*NOTE: There are no 64bit versions of chromedriver, use 32bit.*
+*NOTE: There are no Windows 64bit versions of chromedriver, use 32bit.*
 
 
 #### "geckodriver/gecko.sh/chromediver needs to be in system PATH"
@@ -221,13 +222,19 @@ TODO
 * Wait until file exists (with timeout) instead of time.sleep(x) on `test_download_action()`
 * Add download progress bars for downloads
 * Create optional debug output or logfile
-* More detail in `test_datanav_infotab()` (eg. check each tab, compare filename strings)
+* More detail in `test_datanav_infotab()` (eg. check each tab, compare displayed meta data)
 * More detail in `test_datanav_search()` (eg. test tickboxes)
 * Add conditional to skip geckodriver workaround if/when version with bug fix is released
 * Add single letter arguments (eg. -g, --geckodriver)
 * Remove last comma from browser list in variable output
 * Fix fail count
 * Add MacOS support, it should be easy (just add extra elif to webdriver zipnames)
+  * Problems with mac install:
+    * Xvfb doesn't have mac suport.
+    * platform.system() doesn't return 'Mac' or 'OSX'. May need to rely on '--os'
+    * Geckodriver mac version is named '-macos.tar.gz' not '-mac64.tar.gz' or '-mac32.tar.gz'. Causes html (404 page) file with .tar.gz extension.
+    * Geckodriver returning 'no matching capabilities' despite using mac version
+
 
 
 Version Numbering
@@ -256,6 +263,12 @@ This should ensure the newest version is always at the top of the tag list.
 
 Changelog
 ---------
+
+##### 18.01.26.00
+* Added txt.BASIC to end of final print to prevent entire terminal turning green
+
+##### 18.01.25.00
+* Added foundations of Mac support
 
 ##### 18.01.24.01
 * Slight modification to download_webdriver() output

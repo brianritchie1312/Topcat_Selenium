@@ -209,7 +209,7 @@ parser.add_argument('--on-fail',
 #                           # '--user-admin', 'simple', 'root', 'pass',
 #                           # '--path', '/home/user1/icatdownloads/Tests',
 #                           # '--virtual-display',
-#                           '--browsers', 'chrome', 'firefox',
+#                           '--browsers', 'firefox', #'chrome',
 #                           # '--log-level', 'trace',
 #                           '--geckodriver', '0.19.1',
 #                           '--chromedriver', '2.35',
@@ -221,8 +221,8 @@ parser.add_argument('--on-fail',
 
 # Uncomment the line below line when using actual CLI arguments
 
-args = parser.parse_args()
-#
+# args = parser.parse_args()
+
 #-------------------------------------------------------------------------------
 # Variables
 #-------------------------------------------------------------------------------
@@ -1477,7 +1477,7 @@ def test_master():
 
     print_variables()
 
-    # Start Virtual Display
+    # Start Virtual Display (Only works on Linux)
     if (args.virtual_display == True):
         w = 1920
         h = 1080
@@ -1496,7 +1496,7 @@ def test_master():
     else:
         print(txt.RED, end='')
 
-    print("Test complete with " + str(fail_count) + " fails")
+    print("Test complete with " + str(fail_count) + " fails" + txt.BASIC)
 #-END-
 
 #-------------------------------------------------------------------------------
@@ -1514,6 +1514,6 @@ print("    |_|\___/| .__/ \_____\__,_|\__| |_____/ \___|_|\___|_| |_|_|\__,_|_| 
 print("            | |                                                                  ")
 print("            |_|                                                                  ")
 print("---------------------------------------------------------------------------------")
-print("Version: 18.01.24.00")
+print("Version: 18.01.26.00")
 
 test_master()
