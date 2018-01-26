@@ -197,6 +197,15 @@ parser.add_argument('--on-fail',
                     required=False,
                     )
 
+# No ANSI
+parser.add_argument('--no-ansi',
+                     action='store_true',
+                     dest='no_ansi',
+                     help='If your console/terminal doesn\'t support ANSI escaping, use this to hide ANSI',
+                     required=False,
+                     )
+
+
 # Gather all arguments
 
 # Example arguments, meant for testing within IDE (eg. Atom Runner)
@@ -214,6 +223,7 @@ parser.add_argument('--on-fail',
 #                           '--chromedriver', '2.35',
 #                           '--os', 'windows', '64',
 #                           # '--on-fail', 'EXIT',
+#                           '--no-ansi',
 #                           ])
 
 # args = parser.parse_args(['--help'])
@@ -226,13 +236,23 @@ args = parser.parse_args()
 #-------------------------------------------------------------------------------
 
 class txt:
-    BASIC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-    RED = '\033[31m'
-    GREEN = '\033[32m'
-    YELLOW = '\033[93m'
-    BLUE = '\033[94m'
+    if (args.no_ansi != None):
+        BASIC = ''
+        BOLD = ''
+        UNDERLINE = ''
+        RED = ''
+        GREEN = ''
+        YELLOW = ''
+        BLUE = ''
+    else: # if --no-ansi is not used
+        BASIC = '\033[0m'
+        BOLD = '\033[1m'
+        UNDERLINE = '\033[4m'
+        RED = '\033[31m'
+        GREEN = '\033[32m'
+        YELLOW = '\033[93m'
+        BLUE = '\033[94m'
+
     HEADING = YELLOW + BOLD
     SUBHEADING = BOLD
     Success = GREEN + 'Success' + BASIC
@@ -1526,6 +1546,6 @@ print("    |_|\___/| .__/ \_____\__,_|\__| |_____/ \___|_|\___|_| |_|_|\__,_|_| 
 print("            | |                                                                  ")
 print("            |_|                                                                  ")
 print("---------------------------------------------------------------------------------")
-print("Version: 18.01.26.02")
+print("Version: 18.01.26.03")
 
 test_master()

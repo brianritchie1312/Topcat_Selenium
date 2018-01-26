@@ -112,7 +112,7 @@ This script has a few command line arguments.
 | --chromedriver {version number}                 |Recommended| --chromedriver 0.19.1               | Assumes chromedriver already present  | Downloads and extract specified version of chromedriver if not present.                   |
 | --os {name} {bits}                              | No        | --os linux 64                       | Script attempts to gather info itself | Sometimes the script incorrectly assumes the OS and architecture, if this happens the wrong webdriver could be downloaded. Using this, the script ignores what python thinks it's running on and downloads the version specified by the argument. |
 | --on-fail {action}                              |           | --on-fail print                     | Print is used                         | If a task fails it will either PRINT (print 'Failed' and move on) or EXIT (close browser and return exit code 1) |
-
+| --no-ansi                                       | No        | --no-ansi                           | ANSI escaping is used to colour output| Some consoles/terminals don't support ANSI escaping, using this will remove ANSI to clean up ouput |
 
 Notes
 -----
@@ -234,6 +234,8 @@ TODO
 * Remove last comma from browser list in variable output
 * Fix fail count
 * Add Chromium Support
+* Unzip downloaded zip and verify contents
+* Check more than just the file's existence, check metadata
 
 
 
@@ -261,8 +263,21 @@ For example:
 This should ensure the newest version is always at the top of the tag list.
 
 
+Missing Tests
+-------------
+
+These are tests that are not included within the current version and are unlikely to be added anytime soon
+
+* Support for IE, Edge, Safari and other OS specific browsers
+* Globus testing due to need for extra setup
+* Maximum filesize/file limits for carts due to limited space and bandwidth in VMs and travis
+* Email notifications due to need to setup up email that can be read by script (especially when many email services are designed to prevent bots using them)
+
 Changelog
 ---------
+
+##### 18.01.26.03
+* Added -no-ansi argument for consoles/terminals without ANSI escaping
 
 ##### 18.01.26.02
 * Replaced CTRL/CMD+A with .clear()
