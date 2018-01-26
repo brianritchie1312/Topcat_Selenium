@@ -1,6 +1,5 @@
 TopCat Selenium
 ===============
-*NOTE: the most recent chrome update (64.0.3282.119) seems the break chromedriver so until I add chromium support or a new chromedriver is released, you'll have to skip chrome testing*
 
 Summary
 -------
@@ -124,6 +123,7 @@ Notes
 * There is no 64bit windows version of chromedriver so the script downloads 32bit version for windows regardless of the system or user override.
 * Only some versions of chromedriver have 32bit linux versions, so double check versions.
 * For use in IDEs or environments without CLI arguments, there is a block at the end of the arguments section with example arguments, uncomment it (and comment out `args = parser.parse_args()`), modify the arguments as you wish then run.
+* Chrome (64.0.3282.119) does not work with chromedriver 2.35 or any version (as of 26/01/18) so you will have to use an older version of chrome or skip chrome
 
 
 Organization of script
@@ -219,11 +219,6 @@ If problem still occurs, double check the element selector/filename strings.
 #### Browser hangs after opening and does nothing
 This one annoyed me for a while. A new update for chrome (64.0.3282.119) didn't work with any version of chromedriver. So if you experience a similar problem, check version numbers of both drivers and browsers against each other in the notes of webdriver download page. Check when the most recent update of the browser was released, if it's less than a week or two, you may have to reinstall an older browser or just wait for the driver to be updated.
 
-#### Search/Rename test not working or returning false failures
-Check your key bindings, the script uses CTRL+A (or CMD+A for mac) to select some text before replacing it. If the key binding is wrong it will simply add the new text at the end of the original resulting in incorrect searches or filenames different to what the script expects later on.
-
-You can reset your key binding for highlight all to the OS default or add it into the script at the end of the variables section.
-
 
 TODO
 ----
@@ -239,7 +234,6 @@ TODO
 * Remove last comma from browser list in variable output
 * Fix fail count
 * Add Chromium Support
-* Test chrome once version compatibilities are resolved
 
 
 
@@ -270,8 +264,11 @@ This should ensure the newest version is always at the top of the tag list.
 Changelog
 ---------
 
+##### 18.01.26.02
+* Replaced CTRL/CMD+A with .clear()
+
 ##### 18.01.26.01
-* Added MAC support (Not tested with chrome due to chrome version compatibilities (see Notes), will test once resolved)
+* Added MAC support
 * CTRL+A replaced with variable to allow using CMD+A on mac or custom key binding
 
 ##### 18.01.26.00

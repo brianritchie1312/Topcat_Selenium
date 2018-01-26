@@ -392,15 +392,6 @@ obj_row_link = 'a[ng-click="grid.appScope.browse(row.entity)"]' # First data ele
 # Fail Count
 fail_count = 0
 
-# Keystrokes
-if (os_name == "linux") or (os_name == "win"):
-    keys_all = (Keys.CONTROL, "a")
-elif (os_name == "mac"):
-    keys_all = (Keys.COMMAND, "a")
-
-# If you use a non-default key binding for hightlighting all text, enter it here and uncomment
-# keys_all =
-
 #-------------------------------------------------------------------------------
 # Alliases/Shortcuts
 #-------------------------------------------------------------------------------
@@ -708,7 +699,7 @@ def link_check(element, target):
 def search_test(search, visit, dataset, datafile):
 
     element_wait((By.ID, "searchText"))
-    browser.find_element(By.ID, 'searchText').send_keys(keys_all)
+    browser.find_element(By.ID, 'searchText').clear()
     browser.find_element(By.ID, 'searchText').send_keys(search)
     element_click('button[type="submit"]')
     time.sleep(2)
@@ -1149,7 +1140,7 @@ def test_download_cart():
         zipfile_name = "RENAME_TEST-" + current_time()
 
         element_wait((By.CSS_SELECTOR, 'input[ng-model="download.fileName"]'))
-        browser.find_element(By.CSS_SELECTOR, 'input[ng-model="download.fileName"]').send_keys(keys_all)
+        browser.find_element(By.CSS_SELECTOR, 'input[ng-model="download.fileName"]').clear()
         browser.find_element(By.CSS_SELECTOR, 'input[ng-model="download.fileName"]').send_keys(zipfile_name)
         print(txt.Success)
     except NoSuchElementException as ex:
@@ -1535,6 +1526,6 @@ print("    |_|\___/| .__/ \_____\__,_|\__| |_____/ \___|_|\___|_| |_|_|\__,_|_| 
 print("            | |                                                                  ")
 print("            |_|                                                                  ")
 print("---------------------------------------------------------------------------------")
-print("Version: 18.01.26.01")
+print("Version: 18.01.26.02")
 
 test_master()
