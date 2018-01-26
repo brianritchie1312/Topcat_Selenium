@@ -203,6 +203,8 @@ You probably have the wrong version of geckodriver/chromedriver for your system 
 
 *NOTE: There are no Windows 64bit versions of chromedriver, use 32bit.*
 
+If this still persists, check your browser version against webdriver version and notes on webdriver page.
+
 
 #### "geckodriver/gecko.sh/chromediver needs to be in system PATH"
 
@@ -213,6 +215,14 @@ It doesn't but you are probably missing either the executable or the `executable
 Try finding the test within the script and finding the `time.sleep()` line just before the if/try statement. Then increase the time within the brackets (eg. change `time.sleep(1)` to `time.sleep(3)`). It could just be a slow loading/downloading speed.
 
 If problem still occurs, double check the element selector/filename strings.
+
+#### Browser hangs after opening and does nothing
+This one annoyed me for a while. A new update for chrome (64.0.3282.119) didn't work with any version of chromedriver. So if you experience a similar problem, check version numbers of both drivers and browsers against each other in the notes of webdriver download page. Check when the most recent update of the browser was released, if it's less than a week or two, you may have to reinstall an older browser or just wait for the driver to be updated.
+
+#### Search/Rename test not working or returning false failures
+Check your key bindings, the script uses CTRL+A (or CMD+A for mac) to select some text before replacing it. If the key binding is wrong it will simply add the new text at the end of the original resulting in incorrect searches or filenames different to what the script expects later on.
+
+You can reset your key binding for highlight all to the OS default or add it into the script at the end of the variables section.
 
 
 TODO
@@ -228,12 +238,8 @@ TODO
 * Add single letter arguments (eg. -g, --geckodriver)
 * Remove last comma from browser list in variable output
 * Fix fail count
-* Add MacOS support, it should be easy (just add extra elif to webdriver zipnames)
-  * Problems with mac install:
-    * Xvfb doesn't have mac suport.
-    * platform.system() doesn't return 'Mac' or 'OSX'. May need to rely on '--os'
-    * Geckodriver mac version is named '-macos.tar.gz' not '-mac64.tar.gz' or '-mac32.tar.gz'. Causes html (404 page) file with .tar.gz extension.
-    * Geckodriver returning 'no matching capabilities' despite using mac version
+* Add Chromium Support
+* Test chrome once version compatibilities are resolved
 
 
 
@@ -263,6 +269,10 @@ This should ensure the newest version is always at the top of the tag list.
 
 Changelog
 ---------
+
+##### 18.01.26.01
+* Added MAC support (Not tested with chrome due to chrome version compatibilities (see Notes), will test once resolved)
+* CTRL+A replaced with variable to allow using CMD+A on mac or custom key binding
 
 ##### 18.01.26.00
 * Added txt.BASIC to end of final print to prevent entire terminal turning green

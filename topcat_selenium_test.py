@@ -8,7 +8,6 @@
 
 # TODO
     # If possible, no reliance on ansible (except args file)
-      # Install chosen browsers
       # Install selenium, pyvirtualdisplay, etc.
     # Replace time.sleep with reliable wait_until
     # Add tests for everything in checklist
@@ -209,7 +208,7 @@ parser.add_argument('--on-fail',
 #                           # '--user-admin', 'simple', 'root', 'pass',
 #                           # '--path', '/home/user1/icatdownloads/Tests',
 #                           # '--virtual-display',
-#                           '--browsers', 'firefox', #'chrome',
+#                           # '--browsers', 'chrome', 'firefox',
 #                           # '--log-level', 'trace',
 #                           '--geckodriver', '0.19.1',
 #                           '--chromedriver', '2.35',
@@ -220,8 +219,7 @@ parser.add_argument('--on-fail',
 # args = parser.parse_args(['--help'])
 
 # Uncomment the line below line when using actual CLI arguments
-
-# args = parser.parse_args()
+args = parser.parse_args()
 
 #-------------------------------------------------------------------------------
 # Variables
@@ -337,12 +335,16 @@ else:
 # --os
 if (args.os_name != None):
     # os_name
+    # TODO - replace with 'x in list' instead of multiple ORs
     if (args.os_name[0][0].lower() == "linux"):
         os_name = "linux"
     elif (args.os_name[0][0].lower() == "windows") or (args.os_name[0][0].lower() == "win"):
         os_name = "win"
+    elif (args.os_name[0][0].lower() == "mac") or (args.os_name[0][0].lower() == "macos") or (args.os_name[0][0].lower() == "osx") or (args.os_name[0][0].lower() == "darwin"):
+        os_name = "mac"
     else:
         print(os_name[0][0] + " is either not recognised or not supported.")
+        exit(1)
 
     # os_bit
     if (args.os_name[0][1] == "32"):
@@ -351,12 +353,16 @@ if (args.os_name != None):
         os_bit = "64"
     else:
         print(os_name[0][1] + "bit system not recognised or supported")
+        exit(1)
 else:
     # os_name
     if (platform.system() == "Linux"):
             os_name = "linux"
     elif (platform.system() == "Windows"):
             os_name = "win"
+    else:
+        print(os_name[0][0] + " is either not recognised or not supported. Consider Using OS overide, see '--help'")
+        exit(1)
 
     # os_bit
     if (platform.machine()[-2:] == "32") or (platform.machine()[-2:] == "86"):
@@ -364,7 +370,8 @@ else:
     elif (platform.machine()[-2:] == "64"):
         os_bit = "64"
     else:
-        print(platform.machine()[-2:] + "bit not recognised or not supported. Value taken from platform.machine() = " + platform.machine())
+        print(platform.machine()[-2:] + "bit is either not recognised or not supported. Value taken from platform.machine() = " + platform.machine() + ". Consider using OS overide, see '--help'")
+        exit(1)
 #-END-
 
 # --on-fail
@@ -384,6 +391,15 @@ obj_row_link = 'a[ng-click="grid.appScope.browse(row.entity)"]' # First data ele
 
 # Fail Count
 fail_count = 0
+
+# Keystrokes
+if (os_name == "linux") or (os_name == "win"):
+    keys_all = (Keys.CONTROL, "a")
+elif (os_name == "mac"):
+    keys_all = (Keys.COMMAND, "a")
+
+# If you use a non-default key binding for hightlighting all text, enter it here and uncomment
+# keys_all =
 
 #-------------------------------------------------------------------------------
 # Alliases/Shortcuts
@@ -412,26 +428,29 @@ def download_webdriver(driver, version, allow_download):
     if (driver == "geckodriver"):
 
         if (os_name == "linux"):
-            archive_extension = ".tar.gz"
+            geckodriver_file = os_name + os_bit + ".tar.gz"
             exc_file = "geckodriver"
         elif (os_name == "win"):
-            archive_extension = ".zip"
+            geckodriver_file = os_name + os_bit + ".zip"
             exc_file = "geckodriver.exe"
+        elif (os_name == "mac"):
+            geckodriver_file = os_name + "os" + ".tar.gz" # Architecture is not part of filename for Mac versions of geckodriver
+            exc_file = "geckodriver"
 
-        archive_file = "geckodriver-v" + version + "-" + os_name + os_bit + archive_extension
+        archive_file = "geckodriver-v" + version + "-" + geckodriver_file
         url_file = "https://github.com/mozilla/geckodriver/releases/download/v" + version + "/" + archive_file
 
     # Chromedriver
     elif (driver == "chromedriver"):
 
-        if (os_name == "linux"):
+        if (os_name == "linux") or (os_name == "mac"):
+            chromedriver_file = os_name + os_bit
             exc_file = "chromedriver"
-            os_bit_chromedriver = os_bit
-        elif (os_name == "win"):
+        elif (os_name == "windows"):
+            chromedriver_file = os_name + "32"  # There is no 64bit version of chromedriver
             exc_file = "chromedriver.exe"
-            os_bit_chromedriver = "32"  # There is no 64bit version of chromedriver
 
-        archive_file = "chromedriver_" + os_name + os_bit_chromedriver + ".zip"
+        archive_file = "chromedriver_" + chromedriver_file + ".zip"
         url_file = "https://chromedriver.storage.googleapis.com/" + version + "/" + archive_file
 
     archive_path = os.path.join(dir_test, archive_file)
@@ -468,7 +487,6 @@ def download_webdriver(driver, version, allow_download):
 
     print("")
 #-END-
-
 
 # Uncompress zip/tarfiles
 def archive_extract(filename):
@@ -690,7 +708,7 @@ def link_check(element, target):
 def search_test(search, visit, dataset, datafile):
 
     element_wait((By.ID, "searchText"))
-    browser.find_element(By.ID, 'searchText').send_keys(Keys.CONTROL + "a")
+    browser.find_element(By.ID, 'searchText').send_keys(keys_all)
     browser.find_element(By.ID, 'searchText').send_keys(search)
     element_click('button[type="submit"]')
     time.sleep(2)
@@ -1131,7 +1149,7 @@ def test_download_cart():
         zipfile_name = "RENAME_TEST-" + current_time()
 
         element_wait((By.CSS_SELECTOR, 'input[ng-model="download.fileName"]'))
-        browser.find_element(By.CSS_SELECTOR, 'input[ng-model="download.fileName"]').send_keys(Keys.CONTROL + "a")
+        browser.find_element(By.CSS_SELECTOR, 'input[ng-model="download.fileName"]').send_keys(keys_all)
         browser.find_element(By.CSS_SELECTOR, 'input[ng-model="download.fileName"]').send_keys(zipfile_name)
         print(txt.Success)
     except NoSuchElementException as ex:
@@ -1276,6 +1294,8 @@ def test_firefox():
 
     elif (os_name == "win"):
         exc_firefox = os.path.join(dir_test, 'geckodriver.exe')
+    elif (os_name == "mac"):
+        exc_firefox = os.path.join(dir_test, 'geckodriver')
 
     # Start Tests
     global browser
@@ -1304,7 +1324,7 @@ def test_chrome():
     chrome_prefs = {"download.default_directory" : dir_dwn_browser}
     chrome_options.add_experimental_option("prefs", chrome_prefs)
 
-    if (os_name == "linux"):
+    if (os_name == "linux") or (os_name == "mac"):
         exc_chrome = os.path.join(dir_test, "chromedriver")
     elif (os_name == "win"):
         exc_chrome = os.path.join(dir_test, 'chromedriver.exe')
@@ -1477,7 +1497,7 @@ def test_master():
 
     print_variables()
 
-    # Start Virtual Display (Only works on Linux)
+    # Start Virtual Display
     if (args.virtual_display == True):
         w = 1920
         h = 1080
@@ -1491,6 +1511,7 @@ def test_master():
         test_chrome()
 
     print("")
+    # Print outcome of test
     if (fail_count == 0):
         print(txt.GREEN, end='')
     else:
@@ -1514,6 +1535,6 @@ print("    |_|\___/| .__/ \_____\__,_|\__| |_____/ \___|_|\___|_| |_|_|\__,_|_| 
 print("            | |                                                                  ")
 print("            |_|                                                                  ")
 print("---------------------------------------------------------------------------------")
-print("Version: 18.01.26.00")
+print("Version: 18.01.26.01")
 
 test_master()
