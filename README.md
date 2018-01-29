@@ -300,6 +300,10 @@ These are tests that are not included within the current version and are unlikel
 Changelog
 ---------
 
+##### 18.01.29.03
+* Fixed Chromium not showing in printed variable list
+* All time.sleep(x) lines now use time.sleep(base_sleep_time + x) allowing users to slow down test if needed with one change. Eg. slow machines or networks. 
+
 ##### 18.01.29.02
 * Improved os_name and browsers if statments with arrays and .lower attributes to allow more options on fewer lines. For example lists of possible strings users (or platform.system()) could use to identify the OS are checked against actual entered/returned string with .lower() attribute applied. So if the user enters "WiNdOwS", it will still store as "win" for later in script. This is better than an OR for every possible string.
 * Improved README

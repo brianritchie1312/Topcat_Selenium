@@ -263,6 +263,9 @@ class txt:
     Failed = RED + 'Failed' + BASIC
 #-END-
 
+# Sleep time
+base_sleep_time = 2
+
 # --fac-short
 if (args.fac_short != None):
     facilty_short_name = args.fac_short
@@ -507,7 +510,7 @@ def download_webdriver(driver, version, allow_download):
                 # Download archive if not present
                 print("Downloading " + url_file + ": ", end='')
                 urllib.urlretrieve(url_file, archive_file)
-                time.sleep(3)
+                time.sleep(base_sleep_time + 2)
                 print(txt.BOLD + "Done" + txt.BASIC)
 
             # Extract archived file
@@ -587,7 +590,7 @@ def login(mechanism, username, password):
 # Logout
 def logout():
         browser.get(icat_url + "/#/")   # Return to Home, Topcat saves browse path across multiple users, this should reset it
-        time.sleep(1)
+        time.sleep(base_sleep_time)
         browser.get(icat_url + "/#/logout")
 #-END-
 
@@ -647,7 +650,7 @@ def cart_add():
     # Compare no. of items in cart to previous
     try:
         element_wait((By.CSS_SELECTOR, obj_cart_icon))
-        time.sleep(1)
+        time.sleep(base_sleep_time)
         post_items = cart_items()
         if (post_items == (pre_items + 1)):
             return post_items           # If 1 item has been added to cart)
@@ -669,7 +672,7 @@ def cart_rm():
         element_wait((By.CSS_SELECTOR, 'a[translate="CART.ACTIONS.LINK.REMOVE.TEXT"]'))
         element_click('a[translate="CART.ACTIONS.LINK.REMOVE.TEXT"]')
 
-        time.sleep(1)
+        time.sleep(base_sleep_time)
         post_items = cart_items()
 
         if (post_items == pre_items - 1):
@@ -688,9 +691,9 @@ def cart_clear():
             element_click(obj_cart_icon)
 
         element_wait((By.CSS_SELECTOR, 'button[translate="CART.REMOVE_ALL_BUTTON.TEXT"]'))
-        time.sleep(1)
+        time.sleep(base_sleep_time)
         element_click('button[translate="CART.REMOVE_ALL_BUTTON.TEXT"]')
-        time.sleep(1)
+        time.sleep(base_sleep_time)
     except NoSuchElementException as ex:
         print("Cart already non-existent")
         print(ex)
@@ -702,11 +705,11 @@ def downloads_clear():
         # If downloads not already open click downloads icon
         if (element_exists('div[class="modal-content ng-scope"]') == False):
             element_click(obj_downloads_icon)
-        time.sleep(1)
+        time.sleep(base_sleep_time)
 
         while (element_exists('a[translate="DOWNLOAD.ACTIONS.LINK.REMOVE.TEXT"]') == True):
             element_click('a[translate="DOWNLOAD.ACTIONS.LINK.REMOVE.TEXT"]')
-            time.sleep(1)
+            time.sleep(base_sleep_time)
 
     except NoSuchElementException as ex:
         print("Downloads already non-existent")
@@ -720,7 +723,7 @@ def link_check(element, target):
     try:
         element_wait((By.CSS_SELECTOR, element))
         element_click(element)
-        time.sleep(1)
+        time.sleep(base_sleep_time)
 
         if (browser.current_url == icat_url + target):
             print(txt.Success)
@@ -744,14 +747,14 @@ def search_test(search, visit, dataset, datafile):
     browser.find_element(By.ID, 'searchText').clear()
     browser.find_element(By.ID, 'searchText').send_keys(search)
     element_click('button[type="submit"]')
-    time.sleep(2)
+    time.sleep(base_sleep_time + 1)
 
     search_results(search, "Visit", visit)
-    time.sleep(1)
+    time.sleep(base_sleep_time)
     search_results(search, "Dataset", dataset)
-    time.sleep(1)
+    time.sleep(base_sleep_time)
     search_results(search, "Datafile", datafile)
-    time.sleep(1)
+    time.sleep(base_sleep_time)
 #-END-
 
 # Check results of search and output results
@@ -766,7 +769,7 @@ def search_results(search, tab, target):
         tab = "investigation"
 
     element_click('a[ng-click="searchResultsController.currentTab = \'' + tab.lower() + '\'"]')
-    time.sleep(1)
+    time.sleep(base_sleep_time)
 
     if (target == True): # If results should exist
         if (element_exists('div[class="ui-grid-cell-contents ng-scope"]') == True): # IF results DO exist
@@ -790,7 +793,7 @@ def browse_click(level, target, element):
 
     element_wait((By.CSS_SELECTOR, obj_row_link))
     element_click(obj_row_link)
-    time.sleep(3)
+    time.sleep(base_sleep_time + 2)
 
     if (element_exists('i[translate="ENTITIES.' + target.upper() + '.NAME"]') == True):
         print(txt.Success)
@@ -804,12 +807,12 @@ def browse_click(level, target, element):
 def datanav_infotab(level, url):
     print("Info Tab " + level + " Level: ", end='')
     browser.get(url)
-    time.sleep(1)
+    time.sleep(base_sleep_time)
 
     # Click empty space on row, not link text
         # WARNING this does not guarantee child element (hyperlink) will not be clicked, especially on smaller resolutions
     element_click('div[class="ui-grid-cell-contents ng-binding ng-scope"]')
-    time.sleep(1)
+    time.sleep(base_sleep_time)
 
     if (element_exists('div[class="ui-grid-row ng-scope"]') == True):
         print(txt.Success)
@@ -851,7 +854,7 @@ def datanav_infotab(level, url):
 def test_url():
     print("Load Login Page: ", end='')
     browser.get(icat_url)
-    time.sleep(3)
+    time.sleep(base_sleep_time + 2)
 
     if (browser.current_url == icat_url + '/#/login'):
         print(txt.Success + " (" + browser.current_url + ")")
@@ -869,7 +872,7 @@ def test_login(mechanism, username, password):
     print("Login Test: ", end='')
     login(mechanism, username, password)
 
-    time.sleep(2)
+    time.sleep(base_sleep_time + 1)
     if (browser.current_url == icat_home):
         print(txt.Success)
     else:
@@ -881,7 +884,7 @@ def test_login(mechanism, username, password):
 # Check Nav buttons in top toolbar
 def test_nav_toolbar():
     browser.get(icat_home)
-    time.sleep(1)
+    time.sleep(base_sleep_time)
 
     print("Toolbar About Page Link Test: ", end='')
     link_check('a[ui-sref="about"]', '/#/about')
@@ -900,7 +903,7 @@ def test_nav_toolbar():
   # admin = Boolean, is current user admin?
 def test_nav_toolbar_admin(admin):
     browser.get(icat_home)
-    time.sleep(1)
+    time.sleep(base_sleep_time)
 
     if (admin == True):
         print("Toolbar Admin Page Link: ", end='')
@@ -955,7 +958,7 @@ def test_nav_footer():
 # Find and click 'My Data', 'Browse' and 'Search' tabs
 def test_nav_tabs():
     browser.get(icat_home)
-    time.sleep(1)
+    time.sleep(base_sleep_time)
 
     print("Tabs Browse Link Test: ", end='')
     link_check('a[translate="MAIN_NAVIGATION.MAIN_TAB.BROWSE"]', '/#/browse/facility/' + facilty_short_name +'/proposal')
@@ -973,7 +976,7 @@ def test_nav_tabs():
   # data = Boolean, true if user is supposed to have access to testdata
 def test_data_exists(data):
     browser.get(icat_home)
-    time.sleep(1)
+    time.sleep(base_sleep_time)
 
     if (data == True):
         print("Data Existence Test: ", end='')
@@ -997,7 +1000,7 @@ def test_data_cart():
 
         while (element_exists(obj_cart_icon) == True):
             cart_clear()
-            time.sleep(1)
+            time.sleep(base_sleep_time)
 
         if (element_exists(obj_cart_icon) == False):
             print(" - Cart Now Empty")
@@ -1013,7 +1016,7 @@ def test_data_downloads():
     if (element_exists(obj_downloads_icon) == True):
         fail_test("")
         downloads_clear()
-        time.sleep(1)
+        time.sleep(base_sleep_time)
         if (element_exists(obj_downloads_icon) == False):
             print(" - Downloads Now Empty")
         else:
@@ -1028,17 +1031,17 @@ def test_data_downloads():
 def test_datanav_browse():
     browser.get(icat_url + '/#/browse/facility/' + facilty_short_name + '/proposal')
 
-    time.sleep(1)
+    time.sleep(base_sleep_time)
     browse_click("Proposal", "Investigation", obj_row_link)
     # global visit_url
     # visit_url = browser.current_url
 
-    time.sleep(1)
+    time.sleep(base_sleep_time)
     browse_click("Investigation", "Dataset", obj_row_link)
     global dataset_url
     dataset_url = browser.current_url
 
-    time.sleep(1)
+    time.sleep(base_sleep_time)
     browse_click("Dataset", "Datafile", obj_row_link)
     global datafile_url
     datafile_url = browser.current_url
@@ -1078,7 +1081,7 @@ def test_datanav_infotab():
 def test_cart_add():
 
     browser.get(dataset_url)
-    time.sleep(2)
+    time.sleep(base_sleep_time + 1)
 
     print("Add Dataset to Cart: ", end='')
     if (cart_add() == 1):
@@ -1086,10 +1089,10 @@ def test_cart_add():
     else:
         print (txt.Failed + " (" + element_find('span[ng-click="indexController.showCart()"]').text + ")" )
 
-    time.sleep(3)
+    time.sleep(base_sleep_time + 2)
     # Click 2nd Dataset, Entire Dataset 1 is already in cart
     browser.find_element(By.LINK_TEXT, 'Dataset 2').click()
-    time.sleep(1)
+    time.sleep(base_sleep_time)
 
     print("Add Datafile to Cart: ", end='')
     if (cart_add() == 2):
@@ -1102,7 +1105,7 @@ def test_cart_add():
 def test_cart_rm():
     print("Remove Single Item from Cart: ", end='')
     cart_rm()
-    time.sleep(1)
+    time.sleep(base_sleep_time)
     if (cart_items() == 1):
         print(txt.Success + " (" + element_find('span[ng-click="indexController.showCart()"]').text + ")")
     else:
@@ -1113,7 +1116,7 @@ def test_cart_rm():
 def test_cart_clear():
     print("Clear Cart: ", end='')
     cart_clear()
-    time.sleep(1)
+    time.sleep(base_sleep_time)
 
     if (element_exists(obj_cart_icon) == False):
         print(txt.Success)
@@ -1131,7 +1134,7 @@ def test_download_action():
 
     print("Download By Action: ", end='')
     browser.get(datafile_url)
-    time.sleep(1)
+    time.sleep(base_sleep_time)
 
     try:
         element_wait((By.CSS_SELECTOR, 'a[translate="DOWNLOAD_ENTITY_ACTION_BUTTON.TEXT"]'))
@@ -1146,7 +1149,7 @@ def test_download_action():
     file_datafile = os.path.join(dir_dwn_browser, datafile_name)
 
     # TODO - Replace with wait-until/timeout
-    time.sleep(3)
+    time.sleep(base_sleep_time + 2)
 
     if os.path.isfile(file_datafile):
         print(txt.Success + " ('" + datafile_name + "' exists in browser's download directory)")
@@ -1161,7 +1164,7 @@ def test_download_action():
 def test_download_cart():
 
     cart_add()
-    time.sleep(1)
+    time.sleep(base_sleep_time)
 
     # Open Cart
     if (element_exists('div[class="modal-dialog modal-lg"]') == False):
@@ -1170,7 +1173,7 @@ def test_download_cart():
     try:
         # Click 'Downlaod Cart'
         element_wait((By.CSS_SELECTOR, 'button[translate="CART.DOWNLOAD_CART_BUTTON.TEXT"]'))
-        time.sleep(1)
+        time.sleep(base_sleep_time)
         element_click('button[translate="CART.DOWNLOAD_CART_BUTTON.TEXT"]')
     except NoSuchElementException as ex:
         print(ex)
@@ -1212,9 +1215,9 @@ def test_download_cart():
 
     # Click 'OK'
     element_wait((By.CSS_SELECTOR, 'button[translate="CART.DOWNLOAD.MODAL.BUTTON.OK.TEXT"]'))
-    time.sleep(1)
+    time.sleep(base_sleep_time)
     element_click('button[translate="CART.DOWNLOAD.MODAL.BUTTON.OK.TEXT"]')
-    time.sleep(1)
+    time.sleep(base_sleep_time)
 
     # Check if cart hidden
     if (element_exists(obj_cart_icon) == False):
@@ -1231,7 +1234,7 @@ def test_download_cart():
     file_zip = os.path.join(dir_dwn_browser, zipfile_name)
 
     # TODO - Replace with wait-until/timeout
-    time.sleep(3)
+    time.sleep(base_sleep_time + 2)
 
     # It be worth moving this to a repeatable function/method
     if zipfile.is_zipfile(file_zip + ".zip"):
@@ -1249,7 +1252,7 @@ def test_download_available():
         if (element_exists('div[class="modal-content ng-scope"]') == False):
             element_click(obj_downloads_icon)
 
-        time.sleep(1)
+        time.sleep(base_sleep_time)
 
         # If Status text Says Availiable
         if (element_find('span[class="ng-binding ng-scope"]').text == "Available"):
@@ -1440,6 +1443,8 @@ def print_variables():
         print("Firefox ", end="")
     if (chrome == True):
         print("Chrome ", end="")
+    if (chromium == True):
+        print("Chromium ", end="")
     print("")
 
     # Log Level
@@ -1584,6 +1589,6 @@ print("    |_|\___/| .__/ \_____\__,_|\__| |_____/ \___|_|\___|_| |_|_|\__,_|_| 
 print("            | |                                                                  ")
 print("            |_|                                                                  ")
 print("---------------------------------------------------------------------------------")
-print("Version: 18.01.29.02")
+print("Version: 18.01.29.03")
 
 test_master()
