@@ -457,7 +457,7 @@ def download_webdriver(driver, version, allow_download):
         if (os_name == "linux") or (os_name == "mac"):
             chromedriver_file = os_name + os_bit
             exc_file = "chromedriver"
-        elif (os_name == "windows"):
+        elif (os_name == "win"):
             chromedriver_file = os_name + "32"  # There is no 64bit version of chromedriver
             exc_file = "chromedriver.exe"
 
@@ -488,10 +488,10 @@ def download_webdriver(driver, version, allow_download):
                 time.sleep(3)
                 print(txt.BOLD + "Done" + txt.BASIC)
 
-                # Extract archived file
-                print("Extracting " + archive_file + ": ", end='')
-                archive_extract(archive_file)
-                print(txt.BOLD + "Done" + txt.BASIC)
+            # Extract archived file
+            print("Extracting " + archive_file + ": ", end='')
+            archive_extract(archive_file)
+            print(txt.BOLD + "Done" + txt.BASIC)
 
         else: # If executable is absent but downloads are disabled
             print("Please Download and extract the " + driver + " excutable to test directory or add '--" + driver + " VERSION_NUM' to command line.")

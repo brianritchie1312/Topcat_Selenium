@@ -223,19 +223,29 @@ This one annoyed me for a while. A new update for chrome (64.0.3282.119) didn't 
 TODO
 ----
 
-* Add upwards browsing (eg. datafile -> dataset -> investigation) to Data Navigation tests
-* Wait until file exists (with timeout) instead of time.sleep(x) on `test_download_action()`
-* Add download progress bars for downloads
-* Create optional debug output or logfile
-* More detail in `test_datanav_infotab()` (eg. check each tab, compare displayed meta data)
-* More detail in `test_datanav_search()` (eg. test tickboxes)
-* Add conditional to skip geckodriver workaround if/when version with bug fix is released
-* Add single letter arguments (eg. -g, --geckodriver)
-* Remove last comma from browser list in variable output
-* Fix fail count
-* Add Chromium Support
-* Unzip downloaded zip and verify contents
-* Check more than just the file's existence, check metadata
+* Tests
+  * Upwards browsing (eg. datafile -> dataset -> investigation) to Data Navigation tests
+  * More detail in `test_datanav_infotab()` (eg. check each tab, compare displayed meta data)
+  * More detail in `test_datanav_search()` (eg. test tickboxes)
+  * Unzip cart download and check contents
+  * Check metadata of downloaded file instead of just it's existence
+* Support
+  * Chromium
+  * Android
+  * Improve OS and Architecture detection
+  * Conditional skip geckodriver workaround when fix released
+  * Python3
+* Technical Improvements
+  * Use Appropriate wait_until() instead of time.sleep(x)
+  * Wait until file exists (with timeout) instead of time.sleep(x) on `test_download_action()`
+  * Replace `if (x) or (y)` with `if a in b`, where b is array/list. Eg. os_name
+  * If possible, install dependencies within script
+* User Improvements
+  * Progress bars
+  * Optional verbose output (eg. include def names)
+  * Log files
+  * Single letter arguments
+  * Use quotes on CLI to support items with whitespaces.
 
 
 
@@ -275,6 +285,10 @@ These are tests that are not included within the current version and are unlikel
 
 Changelog
 ---------
+
+##### 18.01.29.00
+* Corrected os_name error for windows
+* Corrected extracting web driver when compressed file exists but has not been extracted
 
 ##### 18.01.26.04
 * Fixed --no-ansi to prevent it always being in effect
