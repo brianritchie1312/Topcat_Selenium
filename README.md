@@ -50,7 +50,7 @@ Dependencies
 ------------
 *NOTE - The exact version compatibilities still need to be tested/documented but using the latest stable version of each should be fine)*
 
-* Windows or Linux OS
+* Windows, Linux or OSX
 
 * Python 2.7 (Should also work with 3.0+ but not tested)
 
@@ -59,11 +59,15 @@ Dependencies
   pip install selenium
   ```
 
-* At least one or all of these browsers installed:
+* At least one or more of these browsers installed:
   * [Mozilla Firefox](https://www.mozilla.org/en-GB/firefox/new/)
     * Requires [Geckodriver](https://github.com/mozilla/geckodriver/releases) executable in test directory (installed by script if argument used, see Arguments below)
   * [Google Chrome](https://www.google.co.uk/search?q=chrome&ie=utf-8&oe=utf-8&client=firefox-b&gfe_rd=cr&dcr=0&ei=lB5eWtaeJKbS8AeC06-AAQ)
     * Requires [Chromedriver](https://sites.google.com/a/chromium.org/chromedriver/) executable in test directory (installed by script if argument used, see Arguments below)
+  * [Chromium](https://www.chromium.org/Home)
+    * Also requires [Chromedriver](https://sites.google.com/a/chromium.org/chromedriver/) executable in test directory (installed by script if argument used, see Arguments below)
+
+*Note: As of 24th Jan 2018, the current versions of chrome/chromium seem incompatible with most recent chromedriver 2.3x version (2.35). If 2.36 has not yet been released, use older versions of chrome/chromium*
 
 
 * If a standard GUI is unavailable:
@@ -106,7 +110,7 @@ This script has a few command line arguments.
 | --user-admin {mechanism} {username} {password}  | No        | --user-admin simple root pass       | Data User assumed to be admin         | The plugin, username and password of the admin user.                                      |
 | --virtual-display			                          | No        | --virtual-display                   | Standard GUI used                     | Creates a virtual display with pyvirtualdisplay. Use if standard GUI is unavailiable.     |
 | --path {path}                                   | No        | --path /home/user1/tests            | Script's current directory used       | Directory where webdriver excutables are and files will be downloaded to.                 |
-| --browsers {browser1} {browser2} ...            | No        | --browsers firefox chrome           | Only firefox tested                   | List of browsers to test. (Supported: firefox, chrome)                                    |
+| --browsers {browser1} {browser2} ...            | No        | --browsers firefox chrome           | Only firefox tested                   | List of browsers to test. (Supported: firefox, chrome, chromium)                                    |
 | --log-level {loglevel}                          | No        | --log-level trace                   | Default log level used                | Log level of webdrivers. Currently only geckodriver.log (firefox webdriver) is modified.  |
 | --geckodriver {version number}                  |Recommended| --geckodriver 0.19.1                | Assumes geckodriver already present   | Downloads and extract specified version of geckodriver (firefox webdriver) if not present.|
 | --chromedriver {version number}                 |Recommended| --chromedriver 0.19.1               | Assumes chromedriver already present  | Downloads and extract specified version of chromedriver if not present.                   |
@@ -221,6 +225,14 @@ This one annoyed me for a while. A new update for chrome didn't work with any ve
 
 A Chrome/Chromium Update some time just before 24th Jan 2018 broke version 2.35 of Chromedriver, so if 2.36 hasn't been released yet, try installing older versions of chrome/chromium.
 
+#### Something about 'Exec'
+The executable for your chosen browser might not be in PATH or the binary_location option is pointing to wrong location or missing.
+Look in `test_firefox()` ot `test_chrome()`, the line will be something like:
+```
+chrome_options.binary_location = "PATH"
+```
+If it's missing or has an incorrect PATH, correct it.
+
 
 TODO
 ----
@@ -287,6 +299,10 @@ These are tests that are not included within the current version and are unlikel
 
 Changelog
 ---------
+
+##### 18.01.29.02
+* Improved os_name and browsers if statments with arrays and .lower attributes to allow more options on fewer lines. For example lists of possible strings users (or platform.system()) could use to identify the OS are checked against actual entered/returned string with .lower() attribute applied. So if the user enters "WiNdOwS", it will still store as "win" for later in script. This is better than an OR for every possible string.
+* Improved README
 
 ##### 18.01.29.01
 * Add Chromium support

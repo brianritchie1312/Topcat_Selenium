@@ -153,7 +153,7 @@ parser.add_argument('--browsers',
                     action='append',
                     nargs='+',
                     dest='browsers',
-                    help='List of browsers to test. (Syntax: ""--browsers <item1> <item2> ...") (Example "--browsers firefox chrome) (Default: Only Firefox) (Supported: Firefox, Chrome, Chromium)"',
+                    help='List of browsers to test. (Syntax: ""--browsers <item1> <item2> ...") (Example "--browsers firefox chrome) (Default: Only Firefox) (Supported: Firefox, Chrome)"',
                     required=False,
                     )
 
@@ -219,7 +219,7 @@ parser.add_argument('--no-ansi',
 #                           # '--path', '/home/user1/icatdownloads/Tests',
 #                           # '--virtual-display',
 #                           '--browsers',
-#                           'firefox',
+#                           'FiRefOx',
 #                           # 'chrome',
 #                           'chromium',
 #                           # '--log-level', 'trace',
@@ -318,19 +318,19 @@ else:
 if (args.browsers != None):
 
     # Firefox
-    if ('firefox' in args.browsers[0]) or ('Firefox' in args.browsers[0]):      # if --browser is used and firefox is in list
+    if ('firefox' in str(args.browsers[0]).lower()):
         firefox = True
     else:                   # if --browser is used and firefox is not in list
         firefox = False
 
     # Chrome
-    if ('chrome' in args.browsers[0]) or ('Chrome' in args.browsers[0]):
+    if ('chrome' in str(args.browsers[0]).lower()):
         chrome = True
     else:
         chrome = False
 
     # Chromium
-    if ('chromium' in args.browsers[0]) or ('Chromium' in args.browsers[0]):
+    if ('chromium' in str(args.browsers[0]).lower()):
         chromium = True
     else:
         chromium = False
@@ -365,16 +365,20 @@ else:
     chromedriver_version = "None"
 #-END-
 
-
 # --os
+# This may be unecessary but I'm unsure how many possible returns there are for platform.system() (or what users might write on --os arg), this system will make it much easier to add more if needed
+linux_names = ["linux"]
+win_names = ["windows", "win"]
+mac_names = ["mac", "macos", "osx", "darwin"]
+
 if (args.os_name != None):
     # os_name
     # TODO - replace with 'x in list' instead of multiple ORs
-    if (args.os_name[0][0].lower() == "linux"):
+    if (args.os_name[0][0].lower() in linux_names):
         os_name = "linux"
-    elif (args.os_name[0][0].lower() == "windows") or (args.os_name[0][0].lower() == "win"):
+    elif (args.os_name[0][0].lower() in win_names):
         os_name = "win"
-    elif (args.os_name[0][0].lower() == "mac") or (args.os_name[0][0].lower() == "macos") or (args.os_name[0][0].lower() == "osx") or (args.os_name[0][0].lower() == "darwin"):
+    elif (args.os_name[0][0].lower() in mac_names):
         os_name = "mac"
     else:
         print(os_name[0][0] + " is either not recognised or not supported.")
@@ -392,11 +396,11 @@ if (args.os_name != None):
 # If arg not used
 else:
     # os_name
-    if (platform.system() == "Linux"):
+    if (platform.system().lower() in linux_names):
         os_name = "linux"
-    elif (platform.system() == "Windows"):
+    elif (platform.system().lower() in win_names):
         os_name = "win"
-    elif (args.os_name[0][0].lower() == "mac") or (args.os_name[0][0].lower() == "macos") or (args.os_name[0][0].lower() == "osx") or (args.os_name[0][0].lower() == "darwin"):
+    elif (platform.system().lower() in mac_names):
         os_name = "mac"
     else:
         print(os_name[0][0] + " is either not recognised or not supported. Consider Using OS overide, see '--help'")
@@ -1580,6 +1584,6 @@ print("    |_|\___/| .__/ \_____\__,_|\__| |_____/ \___|_|\___|_| |_|_|\__,_|_| 
 print("            | |                                                                  ")
 print("            |_|                                                                  ")
 print("---------------------------------------------------------------------------------")
-print("Version: 18.01.29.01")
+print("Version: 18.01.29.02")
 
 test_master()
