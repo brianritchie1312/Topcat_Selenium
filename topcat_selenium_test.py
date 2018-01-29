@@ -39,6 +39,7 @@ from pyvirtualdisplay import Display
 # OS
 import os
 import os.path
+from os.path import expanduser
 
 # Platform
 import platform
@@ -152,7 +153,7 @@ parser.add_argument('--browsers',
                     action='append',
                     nargs='+',
                     dest='browsers',
-                    help='List of browsers to test. (Syntax: ""--browsers <item1> <item2> ...") (Example "--browsers firefox chrome) (Default: Only Firefox) (Supported: Firefox, Chrome)"',
+                    help='List of browsers to test. (Syntax: ""--browsers <item1> <item2> ...") (Example "--browsers firefox chrome) (Default: Only Firefox) (Supported: Firefox, Chrome, Chromium)"',
                     required=False,
                     )
 
@@ -209,7 +210,7 @@ parser.add_argument('--no-ansi',
 # Gather all arguments
 
 # Example arguments, meant for testing within IDE (eg. Atom Runner)
-# args = parser.parse_args(['--url', 'http://vm1.nubes.stfc.ac.uk:8080',
+# args = parser.parse_args(['--url', 'http://vm8.nubes.stfc.ac.uk:8080',
 #                           # '--fac-short', 'LILS',
 #                           # '--fac-long', 'Lorum Ipsum Light Source',
 #                           '--user-data', 'simple', 'root', 'pass',
@@ -217,13 +218,16 @@ parser.add_argument('--no-ansi',
 #                           # '--user-admin', 'simple', 'root', 'pass',
 #                           # '--path', '/home/user1/icatdownloads/Tests',
 #                           # '--virtual-display',
-#                           # '--browsers', 'chrome', 'firefox',
+#                           '--browsers',
+#                           'firefox',
+#                           # 'chrome',
+#                           'chromium',
 #                           # '--log-level', 'trace',
 #                           '--geckodriver', '0.19.1',
 #                           '--chromedriver', '2.35',
 #                           '--os', 'windows', '64',
 #                           # '--on-fail', 'EXIT',
-#                           '--no-ansi',
+#                           # '--no-ansi',
 #                           ])
 
 # args = parser.parse_args(['--help'])
@@ -312,19 +316,28 @@ else:
 # --browsers
 # TODO - find way to test case insentive strings within list
 if (args.browsers != None):
+
     # Firefox
     if ('firefox' in args.browsers[0]) or ('Firefox' in args.browsers[0]):      # if --browser is used and firefox is in list
         firefox = True
     else:                   # if --browser is used and firefox is not in list
         firefox = False
+
     # Chrome
     if ('chrome' in args.browsers[0]) or ('Chrome' in args.browsers[0]):
         chrome = True
     else:
         chrome = False
+
+    # Chromium
+    if ('chromium' in args.browsers[0]) or ('Chromium' in args.browsers[0]):
+        chromium = True
+    else:
+        chromium = False
 else:                       # if --browser is not used
     firefox = True
     chrome = False
+    chromium = False
 #-END-
 
 # --log-level
@@ -352,6 +365,7 @@ else:
     chromedriver_version = "None"
 #-END-
 
+
 # --os
 if (args.os_name != None):
     # os_name
@@ -374,12 +388,16 @@ if (args.os_name != None):
     else:
         print(os_name[0][1] + "bit system not recognised or supported")
         exit(1)
+
+# If arg not used
 else:
     # os_name
     if (platform.system() == "Linux"):
-            os_name = "linux"
+        os_name = "linux"
     elif (platform.system() == "Windows"):
-            os_name = "win"
+        os_name = "win"
+    elif (args.os_name[0][0].lower() == "mac") or (args.os_name[0][0].lower() == "macos") or (args.os_name[0][0].lower() == "osx") or (args.os_name[0][0].lower() == "darwin"):
+        os_name = "mac"
     else:
         print(os_name[0][0] + " is either not recognised or not supported. Consider Using OS overide, see '--help'")
         exit(1)
@@ -1318,23 +1336,36 @@ def test_firefox():
 #-END-
 
 # Setup and run tests for Chrome
-def test_chrome():
+    # Chrome_type = String, chrome/chromium
+def test_chrome(chrome_type):
     print("")
-    print(txt.HEADING + "[ Chrome Test ]" + txt.BASIC)
+    print(txt.HEADING + "[ " + chrome_type.title() + " Test ]" + txt.BASIC)
 
     download_webdriver("chromedriver", chromedriver_version, chromedriver_dwn)
 
     # Create Download Directory Under dir_test/Downloads/Timestamp/Browser
     global dir_dwn_browser
-    dir_dwn_browser = os.path.join(dir_dwn, "Chrome")
+    dir_dwn_browser = os.path.join(dir_dwn, chrome_type.title())
     os.makedirs(dir_dwn_browser)
-    print("Chrome Download Directory: " + dir_dwn_browser)
+    print(chrome_type.title() + " Download Directory: " + dir_dwn_browser)
 
     chrome_options = ChromeOptions()
-    chrome_options.add_argument("--no-sandbox") # Travis breaks if this line does not exist (It took me way too long to find out)
+
+    # Chromium
+    if (chrome_type == "chromium"):
+        if (os_name == "linux"):
+            chrome_options.binary_location = "/usr/bin/chromium-browser"
+        elif (os_name == "win"):
+            chrome_options.binary_location = os.path.join(expanduser("~"), 'AppData', 'Local', 'Chromium', 'Application', 'chrome.exe' )
+        elif (os_name == "mac"):
+            chrome_options.binary_location = "/Applications/Chromium.app/Contents/MacOS/Chromium"
+
+    # Options
+    chrome_options.add_argument("--no-sandbox") # Travis breaks if this line does not exist (It took me way too long to figure out)
     chrome_prefs = {"download.default_directory" : dir_dwn_browser}
     chrome_options.add_experimental_option("prefs", chrome_prefs)
 
+    # Executable
     if (os_name == "linux") or (os_name == "mac"):
         exc_chrome = os.path.join(dir_test, "chromedriver")
     elif (os_name == "win"):
@@ -1348,7 +1379,7 @@ def test_chrome():
     test_browser()
     print("Closing Chrome")
     browser.quit()
-    print(txt.BOLD + "[ Chrome Test Complete ]" + txt.BASIC)
+    print(txt.BOLD + "[ " + chrome_type.title() + " Test Complete ]" + txt.BASIC)
 #-END-
 
 # TODO - Add support for more browsers (eg. Chromium, Edge, Safari)
@@ -1519,7 +1550,10 @@ def test_master():
         test_firefox()
 
     if (chrome == True):
-        test_chrome()
+        test_chrome("chrome")
+
+    if (chromium == True):
+        test_chrome("chromium")
 
     print("")
     # Print outcome of test
@@ -1546,6 +1580,6 @@ print("    |_|\___/| .__/ \_____\__,_|\__| |_____/ \___|_|\___|_| |_|_|\__,_|_| 
 print("            | |                                                                  ")
 print("            |_|                                                                  ")
 print("---------------------------------------------------------------------------------")
-print("Version: 18.01.29.00")
+print("Version: 18.01.29.01")
 
 test_master()

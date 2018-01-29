@@ -217,7 +217,9 @@ Try finding the test within the script and finding the `time.sleep()` line just 
 If problem still occurs, double check the element selector/filename strings.
 
 #### Browser hangs after opening and does nothing
-This one annoyed me for a while. A new update for chrome (64.0.3282.119) didn't work with any version of chromedriver. So if you experience a similar problem, check version numbers of both drivers and browsers against each other in the notes of webdriver download page. Check when the most recent update of the browser was released, if it's less than a week or two, you may have to reinstall an older browser or just wait for the driver to be updated.
+This one annoyed me for a while. A new update for chrome didn't work with any version of chromedriver. So if you experience a similar problem, check version numbers of both drivers and browsers against each other in the notes of webdriver download page. Check when the most recent update of the browser was released, if it's less than a week or two, you may have to reinstall an older browser or just wait for the driver to be updated.
+
+A Chrome/Chromium Update some time just before 24th Jan 2018 broke version 2.35 of Chromedriver, so if 2.36 hasn't been released yet, try installing older versions of chrome/chromium.
 
 
 TODO
@@ -285,6 +287,10 @@ These are tests that are not included within the current version and are unlikel
 
 Changelog
 ---------
+
+##### 18.01.29.01
+* Add Chromium support
+* Minor fixes to auto detecting mac systems
 
 ##### 18.01.29.00
 * Corrected os_name error for windows
