@@ -216,7 +216,7 @@ It doesn't but you are probably missing either the executable or the `executable
 
 
 #### Test says 'Failed' even when the element/file it's searching for actually does exist
-Try finding the test within the script and finding the `time.sleep()` line just before the if/try statement. Then increase the time within the brackets (eg. change `time.sleep(1)` to `time.sleep(3)`). It could just be a slow loading/downloading speed.
+Open the script, find `base_sleep_time` and incease it's value. This is the number of seconds most tests will wait before checking if the element has loaded. Slow machines or slow networks may need more time to load the elements or download the file.
 
 If problem still occurs, double check the element selector/filename strings.
 
@@ -244,7 +244,6 @@ TODO
   * Unzip cart download and check contents
   * Check metadata of downloaded file instead of just it's existence
 * Support
-  * Chromium
   * Android
   * Improve OS and Architecture detection
   * Conditional skip geckodriver workaround when fix released
@@ -252,14 +251,13 @@ TODO
 * Technical Improvements
   * Use Appropriate wait_until() instead of time.sleep(x)
   * Wait until file exists (with timeout) instead of time.sleep(x) on `test_download_action()`
-  * Replace `if (x) or (y)` with `if a in b`, where b is array/list. Eg. os_name
   * If possible, install dependencies within script
 * User Improvements
   * Progress bars
   * Optional verbose output (eg. include def names)
   * Log files
   * Single letter arguments
-  * Use quotes on CLI to support items with whitespaces.
+  * Use quotes on CLI arguments to support items with whitespaces.
 
 
 
@@ -300,9 +298,12 @@ These are tests that are not included within the current version and are unlikel
 Changelog
 ---------
 
+##### 18.02.02.00
+* Fixed Chromium output saying 'Closing Chrome'
+
 ##### 18.01.29.03
 * Fixed Chromium not showing in printed variable list
-* All time.sleep(x) lines now use time.sleep(base_sleep_time + x) allowing users to slow down test if needed with one change. Eg. slow machines or networks. 
+* All time.sleep(x) lines now use time.sleep(base_sleep_time + x) allowing users to slow down test if needed with one change. Eg. slow machines or networks.
 
 ##### 18.01.29.02
 * Improved os_name and browsers if statments with arrays and .lower attributes to allow more options on fewer lines. For example lists of possible strings users (or platform.system()) could use to identify the OS are checked against actual entered/returned string with .lower() attribute applied. So if the user enters "WiNdOwS", it will still store as "win" for later in script. This is better than an OR for every possible string.

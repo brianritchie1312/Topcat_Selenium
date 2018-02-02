@@ -1384,7 +1384,7 @@ def test_chrome(chrome_type):
     global browser
     browser = webdriver.Chrome(chrome_options=chrome_options, executable_path=exc_chrome)
     test_browser()
-    print("Closing Chrome")
+    print("Closing " + chrome_type.title())
     browser.quit()
     print(txt.BOLD + "[ " + chrome_type.title() + " Test Complete ]" + txt.BASIC)
 #-END-
@@ -1589,6 +1589,6 @@ print("    |_|\___/| .__/ \_____\__,_|\__| |_____/ \___|_|\___|_| |_|_|\__,_|_| 
 print("            | |                                                                  ")
 print("            |_|                                                                  ")
 print("---------------------------------------------------------------------------------")
-print("Version: 18.01.29.03")
+print("Version: 18.02.02.00")
 
 test_master()
