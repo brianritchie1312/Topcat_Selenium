@@ -1192,10 +1192,21 @@ def test_download_cart():
         print (txt.Failed)
 
 
+    # Check http method option availiable
+    httpMethodExists = False
+    print("Cart Transport/Access Method 'http' Option Exists: ", end='')
+    if (element_exists('option[label="http"]') == True):
+        print(txt.Success)
+        httpMethodExists = True
+    else:
+        fail_test(" (http method not an option)")
+
     # Check https method option availiable
+    httpsMethodExists = False
     print("Cart Transport/Access Method 'https' Option Exists: ", end='')
     if (element_exists('option[label="https"]') == True):
         print(txt.Success)
+        httpsMethodExists = True
     else:
         fail_test(" (https method not an option)")
 
@@ -1207,11 +1218,23 @@ def test_download_cart():
         fail_test(" (globus method not an option)")
 
 
-    # Download
-    print("Cart Download Via https: ", end='')
+    if httpsMethodExists:
+        # Download
+        print("Cart Download Via https: ", end='')
 
-    # Select https if not already selected
-    Select(element_find('select[ng-model="download.transportType"]')).select_by_visible_text('https')
+        # Select https if not already selected
+        Select(element_find('select[ng-model="download.transportType"]')).select_by_visible_text('https')
+    elif httpMethodExists:
+        # Download
+        print("Cart Download Via http: ", end='')
+
+        # Select https if not already selected
+        Select(element_find('select[ng-model="download.transportType"]')).select_by_visible_text('http')
+    else:
+        print('No download option for http or https - skipping cart download tests.')
+        return
+
+    # Otherwise, test downloading using the selected method
 
     # Click 'OK'
     element_wait((By.CSS_SELECTOR, 'button[translate="CART.DOWNLOAD.MODAL.BUTTON.OK.TEXT"]'))
