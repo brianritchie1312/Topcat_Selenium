@@ -1127,15 +1127,25 @@ def test_cart_clear():
 #---Download--------------------------------------------------------------------
 
 # Download Datafile via action button
-# TODO - Add varaible for which file gets selected (By name if possible)
 def test_download_action():
 
-    datafile_name = "Datafile 1"
+    # Datafile name that will be used if we can't extract it
+    datafile_name = "Datafile N"
 
-    print("Download By Action: ", end='')
+    print("Get first datafile name: ", end='')
     browser.get(datafile_url)
     time.sleep(base_sleep_time)
 
+    try:
+        # The following assumes that the datafile name we want is in the first span within the first ui-grid-cell div
+        # (and that the CSS selector below selects the Download button on the same row)
+        datafile_name = browser.find_element_by_xpath('//div[@class="ui-grid-cell-contents ng-scope"]/span').text
+        print(txt.Success + '(found "' + datafile_name + '")')
+    except NoSuchElementException as ex:
+        fail_test("")
+        print(ex)
+
+    print("Download By Action: ", end='')
     try:
         element_wait((By.CSS_SELECTOR, 'a[translate="DOWNLOAD_ENTITY_ACTION_BUTTON.TEXT"]'))
         element_click('a[translate="DOWNLOAD_ENTITY_ACTION_BUTTON.TEXT"]')
